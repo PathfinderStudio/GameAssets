@@ -5,21 +5,19 @@ using UnityEngine;
 public class compassFollow : MonoBehaviour {
 
 	public GameObject target;
-	// Use this for initialization
-	void Start ()
-	{
-		
-	}
-	
+	public GameObject firstPersonController;
+
 	// Update is called once per frame
 	void Update ()
     {
+		target.transform.position = new Vector3 (firstPersonController.transform.position.x, target.transform.position.y, target.transform.position.z);
+
 		Vector3 compassPos = this.transform.position; //compass position in world
 
-		Vector3 ballPos = target.transform.position; //mouse position in world
+		Vector3 targetPos = target.transform.position; //mouse position in world
 
-		float angle = Mathf.Atan2 (compassPos.z - ballPos.z, compassPos.x - ballPos.x) * Mathf.Rad2Deg; // angle between them
+		float angle = Mathf.Atan2 (compassPos.z - targetPos.z, compassPos.x - targetPos.x) * Mathf.Rad2Deg; // angle between them
 
-		this.transform.rotation = Quaternion.Euler (new Vector3 (90f, 0f, angle + 90)); //rotating it wrong but at least rotating
+		this.transform.rotation = Quaternion.Euler (new Vector3 (0f, angle, 0f)); //rotating it wrong but at least rotating
     }
 }
