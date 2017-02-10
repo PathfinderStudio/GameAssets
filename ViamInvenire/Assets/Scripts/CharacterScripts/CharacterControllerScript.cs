@@ -15,6 +15,8 @@ public class CharacterControllerScript : MonoBehaviour
     private bool canMove;
     private float maxVelocity;
     private Vector3 velPlayer;
+    private bool holdingJump;
+    private bool grounded;
 
     // Use this for initialization
     void Start()
@@ -28,6 +30,8 @@ public class CharacterControllerScript : MonoBehaviour
         maxVelocity = 10.0f;
         canMove = true;
         velPlayer = Vector3.zero;
+        holdingJump = false;
+        grounded = true;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -78,21 +82,46 @@ public class CharacterControllerScript : MonoBehaviour
             {
                 player.velocity = new Vector3(player.velocity.x, player.velocity.y, -maxVelocity);
             }
-            
-            //player.transform.Translate(playerMovement.x * (float)_runSpeed * Time.deltaTime, 0, playerMovement.z * (float)_runSpeed * Time.deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.Space) && !jumping)
-            {
-                jumping = true;
-                player.AddForce(Vector3.up * jumpAmount);
-            }
-            if (player.velocity.y == 0)
-            {
-                jumping = false;
-            }
+            //player.transform.Translate(playerMovement.x * (float)_runSpeed * Time.deltaTime, 0, playerMovement.z * (float)_runSpeed * Time.deltaTime);
+            jumpingMethod();
+            
         }
     }
 
+    private void jumpingMethod()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && !jumping)
+        {
+            jumping = true;
+            player.AddForce(Vector3.up * jumpAmount);
+        }
+        else if(Input.GetKey(KeyCode.Space))
+        {
+            holdingJump = true;
+        }
+        else if(Input.GetKeyUp(KeyCode.Space))
+        {
+            holdingJump = false;
+        }
+        if (grounded)
+        {
+            jumping = false;
+        }
+    }
+
+    private void IsGrounded()
+    {
+        int mask = 1;
+        int layerMask = mask << 8; //ground is on 8th
+        float length = 2.3f;
+        if(Physics.Raycast(this.transform.localPosition, Vector3.down, length, layerMask))
+        {
+
+        }
+    }
+
+    /*
     private void OnCollisionEnter(Collision col)
     {
         if(col.transform.tag == "Ground")
@@ -110,4 +139,5 @@ public class CharacterControllerScript : MonoBehaviour
             canMove = false;
         }
     }
+    */
 }
