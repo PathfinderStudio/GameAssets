@@ -173,14 +173,30 @@ private var lastGroundNormal : Vector3 = Vector3.zero;
 
 private var tr : Transform;
 
-private var controller : CharacterController;
+private var controller: CharacterController;
+
+private var timeFalling: float = 0.0;
+
+private var originalGravity: float = movement.gravity;
 
 function Awake () {
 	controller = GetComponent (CharacterController);
 	tr = transform;
 }
 
-private function UpdateFunction () {
+private function UpdateFunction() {
+
+    if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) {
+        movement.maxForwardSpeed = 20.0;
+        movement.maxSidewaysSpeed = 20.0;
+        movement.maxBackwardsSpeed = 20.0;
+    }
+    else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) {
+        movement.maxForwardSpeed = 10.0;
+        movement.maxSidewaysSpeed = 10.0;
+        movement.maxBackwardsSpeed = 10.0;
+    }
+
 	// We copy the actual velocity into a temporary variable that we can manipulate.
 	var velocity : Vector3 = movement.velocity;
 	
@@ -218,8 +234,9 @@ private function UpdateFunction () {
 	// Find out how much we need to push towards the ground to avoid loosing grouning
 	// when walking down a step or over a sharp change in slope.
 	var pushDownOffset : float = Mathf.Max(controller.stepOffset, Vector3(currentMovementOffset.x, 0, currentMovementOffset.z).magnitude);
-	if (grounded)
-		currentMovementOffset -= pushDownOffset * Vector3.up;
+    if (grounded)
+        currentMovementOffset -= pushDownOffset * Vector3.up;
+    
 	
 	// Reset variables that will be set by collision function
 	movingPlatform.hitPlatform = null;
@@ -238,7 +255,7 @@ private function UpdateFunction () {
 			movingPlatform.newPlatform = true;
 		}
 	}
-	
+
 	// Calculate the velocity based on the current and previous position.  
 	// This means our velocity will only be the amount the character actually moved as a result of collisions.
 	var oldHVelocity : Vector3 = new Vector3(velocity.x, 0, velocity.z);
@@ -271,7 +288,7 @@ private function UpdateFunction () {
 	// We were grounded but just loosed grounding
 	if (grounded && !IsGroundedTest()) {
 		grounded = false;
-		
+        
 		// Apply inertia from platform
 		if (movingPlatform.enabled &&
 			(movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
@@ -287,7 +304,9 @@ private function UpdateFunction () {
 		tr.position += pushDownOffset * Vector3.up;
 	}
 	// We were not grounded but just landed on something
-	else if (!grounded && IsGroundedTest()) {
+    else if (!grounded && IsGroundedTest()) {
+        timeFalling = 0;
+        movement.gravity = originalGravity;
 		grounded = true;
 		jumping.jumping = false;
 		SubtractNewPlatformVelocity();
@@ -308,7 +327,8 @@ private function UpdateFunction () {
 	}
 }
 
-function FixedUpdate () {
+function FixedUpdate() {
+    
 	if (movingPlatform.enabled) {
 		if (movingPlatform.activePlatform != null) {
 			if (!movingPlatform.newPlatform) {
@@ -331,7 +351,8 @@ function FixedUpdate () {
 		UpdateFunction();
 }
 
-function Update () {
+function Update() {
+    
 	if (!useFixedUpdate)
 		UpdateFunction();
 }
@@ -398,7 +419,16 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 	
 	if (grounded)
 		velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
-	else {
+    else {
+        
+            if (timeFalling < 2.0) {
+                timeFalling += Time.deltaTime;
+
+            }
+            else {
+                movement.gravity += 15.0;
+            }
+        
 		velocity.y = movement.velocity.y - movement.gravity * Time.deltaTime;
 		
 		// When jumping up we don't apply gravity for some time when the user is holding the jump button.
