@@ -60,7 +60,6 @@ public class CharacterStamina : MonoBehaviour
 
         if(!tired && currentTimeRunning >= runTime)
         {
-            Debug.Log("Not tired " + currentTimeRunning);
             tired = true;
             SendMessage("SetCanRun", false, SendMessageOptions.DontRequireReceiver);
         }
@@ -68,7 +67,6 @@ public class CharacterStamina : MonoBehaviour
         {
             if(!running && currentTimeRunning <= minimumThreshold)
             {
-                Debug.Log("Here with time " + currentTimeRunning);
                 tired = false;
                 SendMessage("SetCanRun", true, SendMessageOptions.DontRequireReceiver);
             }
