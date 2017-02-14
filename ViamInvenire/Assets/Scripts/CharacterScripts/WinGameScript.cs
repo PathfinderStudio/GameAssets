@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EndGameScript : MonoBehaviour {
+public class WinGameScript : MonoBehaviour {
+
+    public GameObject winLocation;
 
 	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	void Start ()
+    {
+        this.transform.GetChild(4).transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "WinLocation")
+        {
+            this.transform.GetChild(4).transform.GetChild(0).gameObject.SetActive(true);
+        }
+    }
 }
