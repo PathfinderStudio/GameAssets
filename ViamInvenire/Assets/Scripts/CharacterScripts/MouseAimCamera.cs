@@ -6,9 +6,12 @@ public class MouseAimCamera : MonoBehaviour {
 
     // Use this for initialization
     // speed is the rate at which the object will rotate
-    public float speedX = 10.0f;
-    public float speedY = 10.0f;
-	//public GameObject camera;
+    [Header("Look Sensitivity")]
+    public float speedX = 100.0f;
+    public float speedY = 100.0f;
+    [Header("Vertical Look Constraints")]
+    public float maxY = 70.0f;
+    public float minY = -70.0f;
 
 	private float lookVertical;
 	private float lookHorizontal;
@@ -19,6 +22,7 @@ public class MouseAimCamera : MonoBehaviour {
         {
             this.GetComponent<Rigidbody>().freezeRotation = true;
         }
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     //Based off mouselook script of GreenForest asset pack
@@ -26,13 +30,13 @@ public class MouseAimCamera : MonoBehaviour {
     {
         if(this.tag == "Player")
         {
-            lookHorizontal = this.transform.localEulerAngles.y + Input.GetAxisRaw("Mouse X") * speedX * Time.deltaTime;
+            lookHorizontal = this.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * speedX * Time.deltaTime;
             this.transform.localEulerAngles = new Vector3(0, lookHorizontal, 0);
         }
         else if(this.tag == "MainCamera")
         {
-            lookVertical += Input.GetAxisRaw("Mouse Y") * speedY * -1 * Time.deltaTime;
-            lookVertical = Mathf.Clamp(lookVertical, -60, 60);
+            lookVertical += Input.GetAxis("Mouse Y") * speedY * -1 * Time.deltaTime;
+            lookVertical = Mathf.Clamp(lookVertical, minY, maxY);
             this.transform.localEulerAngles = new Vector3(lookVertical, 0, 0);
         }
 		

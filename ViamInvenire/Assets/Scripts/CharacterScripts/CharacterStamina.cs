@@ -72,4 +72,14 @@ public class CharacterStamina : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Hit the ground from too high up and caused the player to lose their stamina
+    /// </summary>
+    public void LostStamina()
+    {
+        currentTimeRunning = runTime;
+        tired = true;
+        SendMessage("SetCanRun", false, SendMessageOptions.DontRequireReceiver);
+    }
 }

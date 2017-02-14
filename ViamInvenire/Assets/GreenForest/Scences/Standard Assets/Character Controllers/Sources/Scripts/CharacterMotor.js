@@ -547,7 +547,7 @@ private function AdjustGroundVelocityToNormal (hVelocity : Vector3, groundNormal
 	return Vector3.Cross(sideways, groundNormal).normalized * hVelocity.magnitude;
 }
 
-private function IsGroundedTest () {
+private function IsGroundedTest() {
 	return (groundNormal.y > 0.01);
 }
 
