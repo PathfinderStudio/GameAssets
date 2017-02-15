@@ -19,5 +19,6 @@ public class compassFollow : MonoBehaviour {
 		float angle = Mathf.Atan2 (compassPos.z - targetPos.z, compassPos.x - targetPos.x) * Mathf.Rad2Deg; // angle between them
 
 		this.transform.rotation = Quaternion.Euler (new Vector3 (0f, angle, 0f)); // rotates it so it points to that position
+
     }
 }

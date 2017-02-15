@@ -23,7 +23,8 @@ class CharacterMotorMovement {
 	// The maximum horizontal speed when moving
 	var maxForwardSpeed : float = 10.0;
 	var maxSidewaysSpeed : float = 10.0;
-	var maxBackwardsSpeed : float = 10.0;
+    var maxBackwardsSpeed: float = 10.0;
+    var canSprint: boolean = true;
 	
 	// Curve for multiplying speed based on slope (negative = downwards)
 	var slopeSpeedMultiplier : AnimationCurve = AnimationCurve(Keyframe(-90, 1), Keyframe(0, 1), Keyframe(90, 0));
@@ -184,19 +185,25 @@ function Awake () {
 	tr = transform;
 }
 
-private function UpdateFunction() {
 
-    if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) {
-        movement.maxForwardSpeed = 20.0;
-        movement.maxSidewaysSpeed = 20.0;
-        movement.maxBackwardsSpeed = 20.0;
+private function UpdateFunction() {
+    if (movement.canSprint) {
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+            movement.maxForwardSpeed = 20.0;
+            movement.maxSidewaysSpeed = 20.0;
+            movement.maxBackwardsSpeed = 20.0;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) {
+            movement.maxForwardSpeed = 10.0;
+            movement.maxSidewaysSpeed = 10.0;
+            movement.maxBackwardsSpeed = 10.0;
+        }
     }
-    else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) {
+    else {
         movement.maxForwardSpeed = 10.0;
         movement.maxSidewaysSpeed = 10.0;
         movement.maxBackwardsSpeed = 10.0;
     }
-
 	// We copy the actual velocity into a temporary variable that we can manipulate.
 	var velocity : Vector3 = movement.velocity;
 	
@@ -234,9 +241,8 @@ private function UpdateFunction() {
 	// Find out how much we need to push towards the ground to avoid loosing grouning
 	// when walking down a step or over a sharp change in slope.
 	var pushDownOffset : float = Mathf.Max(controller.stepOffset, Vector3(currentMovementOffset.x, 0, currentMovementOffset.z).magnitude);
-    if (grounded)
-        currentMovementOffset -= pushDownOffset * Vector3.up;
-    
+	if (grounded)
+		currentMovementOffset -= pushDownOffset * Vector3.up;
 	
 	// Reset variables that will be set by collision function
 	movingPlatform.hitPlatform = null;
@@ -255,7 +261,7 @@ private function UpdateFunction() {
 			movingPlatform.newPlatform = true;
 		}
 	}
-
+	
 	// Calculate the velocity based on the current and previous position.  
 	// This means our velocity will only be the amount the character actually moved as a result of collisions.
 	var oldHVelocity : Vector3 = new Vector3(velocity.x, 0, velocity.z);
@@ -288,7 +294,7 @@ private function UpdateFunction() {
 	// We were grounded but just loosed grounding
 	if (grounded && !IsGroundedTest()) {
 		grounded = false;
-        
+		
 		// Apply inertia from platform
 		if (movingPlatform.enabled &&
 			(movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
@@ -324,11 +330,10 @@ private function UpdateFunction() {
 		// Support moving platform rotation as well:
         movingPlatform.activeGlobalRotation = tr.rotation;
         movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation; 
-	}
+    }
 }
 
-function FixedUpdate() {
-    
+function FixedUpdate () {
 	if (movingPlatform.enabled) {
 		if (movingPlatform.activePlatform != null) {
 			if (!movingPlatform.newPlatform) {
@@ -351,8 +356,7 @@ function FixedUpdate() {
 		UpdateFunction();
 }
 
-function Update() {
-    
+function Update () {
 	if (!useFixedUpdate)
 		UpdateFunction();
 }
@@ -420,17 +424,14 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 	if (grounded)
 		velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
     else {
-        
-            if (timeFalling < 2.0) {
-                timeFalling += Time.deltaTime;
-
-            }
-            else {
-                movement.gravity += 15.0;
-            }
-        
+        if (timeFalling < 2.0) {
+            timeFalling += Time.deltaTime;
+        }
+        else {
+            movement.gravity += 15.0;
+        }
 		velocity.y = movement.velocity.y - movement.gravity * Time.deltaTime;
-		
+        
 		// When jumping up we don't apply gravity for some time when the user is holding the jump button.
 		// This gives more control over jump height by pressing the button longer.
 		if (jumping.jumping && jumping.holdingJumpButton) {
@@ -546,7 +547,7 @@ private function AdjustGroundVelocityToNormal (hVelocity : Vector3, groundNormal
 	return Vector3.Cross(sideways, groundNormal).normalized * hVelocity.magnitude;
 }
 
-private function IsGroundedTest () {
+private function IsGroundedTest() {
 	return (groundNormal.y > 0.01);
 }
 
@@ -610,6 +611,10 @@ function SetVelocity (velocity : Vector3) {
 	movement.velocity = velocity;
 	movement.frameVelocity = Vector3.zero;
 	SendMessage("OnExternalVelocity");
+}
+
+public function SetCanRun(canRun: boolean) {
+    movement.canSprint = canRun;
 }
 
 // Require a character controller to be attached to the same game object
