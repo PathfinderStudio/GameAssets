@@ -187,7 +187,14 @@ function Awake () {
 
 
 private function UpdateFunction() {
-    if (Time.timeScale != 0) {
+    if (Time.timeScale != 0)
+    {
+        //If the player isn't trying to move, slow the character to a stop more quickly.  Smaller decimal value means
+        //quicker rate of decelaration.
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0 && IsGrounded() && !IsSliding())
+        {
+            movement.velocity *= 0.8;
+        }
         if (movement.canSprint) {
             if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
                 movement.maxForwardSpeed = 20.0;

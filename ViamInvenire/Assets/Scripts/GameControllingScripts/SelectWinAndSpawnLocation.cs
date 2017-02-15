@@ -19,9 +19,14 @@ public class SelectWinAndSpawnLocation : MonoBehaviour
     {
         randIndex = new System.Random();
         randIndex.Next();
+        for(int i = 0; i < spawnLocCont.transform.childCount; i++)
+        {
+            spawnLocCont.transform.GetChild(i).gameObject.SetActive(false);
+            winLocCont.transform.GetChild(i).gameObject.SetActive(false);
+        }
         index = randIndex.Next(spawnLocCont.transform.childCount);
-        spawnLocCont.transform.GetChild(index);
-        winLocCont.transform.GetChild(index);
+        spawnLocCont.transform.GetChild(index).gameObject.SetActive(true);
+        winLocCont.transform.GetChild(index).gameObject.SetActive(true);
     }
 
     // Update is called once per frame
