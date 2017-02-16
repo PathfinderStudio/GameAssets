@@ -299,7 +299,7 @@ private function UpdateFunction() {
             }
         }
 
-        // We were grounded but just loosed grounding
+        // We were grounded but just lost grounding
         if (grounded && !IsGroundedTest()) {
             grounded = false;
 
@@ -432,7 +432,8 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 	
 	if (grounded)
 		velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
-    else {
+	else {
+	    Debug.Log(movement.velocity.y);
         if (timeFalling < 2.0) {
             timeFalling += Time.deltaTime;
         }
