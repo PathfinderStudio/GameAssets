@@ -25,7 +25,8 @@ class CharacterMotorMovement {
 	var maxSidewaysSpeed : float = 10.0;
     var maxBackwardsSpeed: float = 10.0;
     var canSprint: boolean = true;
-	
+
+
 	// Curve for multiplying speed based on slope (negative = downwards)
 	var slopeSpeedMultiplier : AnimationCurve = AnimationCurve(Keyframe(-90, 1), Keyframe(0, 1), Keyframe(90, 0));
 	
@@ -180,6 +181,8 @@ private var timeFalling: float = 0.0;
 
 private var originalGravity: float = movement.gravity;
 
+private var originalSpeed: float = movement.maxForwardSpeed;
+
 function Awake () {
 	controller = GetComponent (CharacterController);
 	tr = transform;
@@ -197,20 +200,20 @@ private function UpdateFunction() {
         }
         if (movement.canSprint) {
             if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
-                movement.maxForwardSpeed = 20.0;
-                movement.maxSidewaysSpeed = 20.0;
-                movement.maxBackwardsSpeed = 20.0;
+                movement.maxForwardSpeed = originalSpeed * 2;
+                movement.maxSidewaysSpeed = originalSpeed * 2;
+                movement.maxBackwardsSpeed = originalSpeed * 2;
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) {
-                movement.maxForwardSpeed = 10.0;
-                movement.maxSidewaysSpeed = 10.0;
-                movement.maxBackwardsSpeed = 10.0;
+                movement.maxForwardSpeed = originalSpeed;
+                movement.maxSidewaysSpeed = originalSpeed;
+                movement.maxBackwardsSpeed = originalSpeed;
             }
         }
         else {
-            movement.maxForwardSpeed = 10.0;
-            movement.maxSidewaysSpeed = 10.0;
-            movement.maxBackwardsSpeed = 10.0;
+            movement.maxForwardSpeed = originalSpeed;
+            movement.maxSidewaysSpeed = originalSpeed;
+            movement.maxBackwardsSpeed = originalSpeed;
         }
         // We copy the actual velocity into a temporary variable that we can manipulate.
         var velocity: Vector3 = movement.velocity;
@@ -299,7 +302,7 @@ private function UpdateFunction() {
             }
         }
 
-        // We were grounded but just loosed grounding
+        // We were grounded but just lost grounding
         if (grounded && !IsGroundedTest()) {
             grounded = false;
 
@@ -440,6 +443,7 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
         //    movement.gravity += 15.0;
         //}
         movement.gravity += (movement.gravity * Time.deltaTime);
+
 		velocity.y = movement.velocity.y - movement.gravity * Time.deltaTime;
         
 		// When jumping up we don't apply gravity for some time when the user is holding the jump button.
