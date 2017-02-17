@@ -71,4 +71,9 @@ public class CharacterDeathScript : MonoBehaviour
     {
         grounded = false;
     }
+
+    public void OnJump()
+    {
+        grounded = false;
+    }
 }
