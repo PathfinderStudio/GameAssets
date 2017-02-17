@@ -25,13 +25,14 @@ class CharacterMotorMovement {
 	var maxSidewaysSpeed : float = 10.0;
     var maxBackwardsSpeed: float = 10.0;
     var canSprint: boolean = true;
-	
+
+
 	// Curve for multiplying speed based on slope (negative = downwards)
 	var slopeSpeedMultiplier : AnimationCurve = AnimationCurve(Keyframe(-90, 1), Keyframe(0, 1), Keyframe(90, 0));
 	
 	// How fast does the character change speeds?  Higher is faster.
 	var maxGroundAcceleration : float = 30.0;
-	var maxAirAcceleration : float = 20.0;
+	var maxAirAcceleration : float = 0.0; // removed air control when at 0
 
 	// The gravity for the character
 	var gravity : float = 10.0;
@@ -74,10 +75,10 @@ class CharacterMotorJumping {
 	var enabled : boolean = true;
 
 	// How high do we jump when pressing jump and letting go immediately
-	var baseHeight : float = 1.0;
+	var baseHeight : float = 0.5; // cut base jump down
 	
 	// We add extraHeight units (meters) on top when holding the button down longer while jumping
-	var extraHeight : float = 4.1;
+	var extraHeight : float = 0.75; //held down jump button
 	
 	// How much does the character jump out perpendicular to the surface on walkable surfaces?
 	// 0 means a fully vertical jump and 1 means fully perpendicular.
@@ -180,6 +181,8 @@ private var timeFalling: float = 0.0;
 
 private var originalGravity: float = movement.gravity;
 
+private var originalSpeed: float = movement.maxForwardSpeed;
+
 function Awake () {
 	controller = GetComponent (CharacterController);
 	tr = transform;
@@ -197,20 +200,20 @@ private function UpdateFunction() {
         }
         if (movement.canSprint) {
             if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
-                movement.maxForwardSpeed = 20.0;
-                movement.maxSidewaysSpeed = 20.0;
-                movement.maxBackwardsSpeed = 20.0;
+                movement.maxForwardSpeed = originalSpeed * 2;
+                movement.maxSidewaysSpeed = originalSpeed * 2;
+                movement.maxBackwardsSpeed = originalSpeed * 2;
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) {
-                movement.maxForwardSpeed = 10.0;
-                movement.maxSidewaysSpeed = 10.0;
-                movement.maxBackwardsSpeed = 10.0;
+                movement.maxForwardSpeed = originalSpeed;
+                movement.maxSidewaysSpeed = originalSpeed;
+                movement.maxBackwardsSpeed = originalSpeed;
             }
         }
         else {
-            movement.maxForwardSpeed = 10.0;
-            movement.maxSidewaysSpeed = 10.0;
-            movement.maxBackwardsSpeed = 10.0;
+            movement.maxForwardSpeed = originalSpeed;
+            movement.maxSidewaysSpeed = originalSpeed;
+            movement.maxBackwardsSpeed = originalSpeed;
         }
         // We copy the actual velocity into a temporary variable that we can manipulate.
         var velocity: Vector3 = movement.velocity;
@@ -385,7 +388,7 @@ private function ApplyInputVelocityChange (velocity : Vector3) {
 		desiredVelocity = desiredVelocity + projectedMoveDir * sliding.speedControl + (inputMoveDirection - projectedMoveDir) * sliding.sidewaysControl;
 		// Multiply with the sliding speed
 		desiredVelocity *= sliding.slidingSpeed;
-	}
+    }
 	else
 		desiredVelocity = GetDesiredHorizontalVelocity();
 	
@@ -432,14 +435,15 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 	
 	if (grounded)
 		velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
-	else {
-	    Debug.Log(movement.velocity.y);
-        if (timeFalling < 2.0) {
-            timeFalling += Time.deltaTime;
-        }
-        else {
-            movement.gravity += 15.0;
-        }
+    else {
+        //if (timeFalling < 2.0 && velocity.y < 0) {
+        //    timeFalling += Time.deltaTime;
+        //}
+        //else if(velocity.y <0) {
+        //    movement.gravity += 15.0;
+        //}
+        movement.gravity += (movement.gravity * Time.deltaTime);
+
 		velocity.y = movement.velocity.y - movement.gravity * Time.deltaTime;
         
 		// When jumping up we don't apply gravity for some time when the user is holding the jump button.
