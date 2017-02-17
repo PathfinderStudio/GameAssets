@@ -14,9 +14,4 @@ public class SpawnCharacter : MonoBehaviour
         player.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

@@ -24,11 +24,11 @@ public class CharacterDeathScript : MonoBehaviour
         youDiedPanel.SetActive(false);
         character = this.GetComponent<CharacterController>();
         characterYVelocity = character.velocity.y;
-        deathVelocity = -28.0f;
+        deathVelocity = -40.0f;
         grounded = false;
         gonnnaDie = false;
         willLoseStamina = false;
-        staminaVelocity = -19.0f;
+        staminaVelocity = -30.0f;
     }
 
     // Update is called once per frame

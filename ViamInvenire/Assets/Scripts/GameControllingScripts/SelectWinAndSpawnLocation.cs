@@ -29,9 +29,4 @@ public class SelectWinAndSpawnLocation : MonoBehaviour
         winLocCont.transform.GetChild(index).gameObject.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

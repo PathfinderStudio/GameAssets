@@ -16,10 +16,4 @@ public class DisableButtons : MonoBehaviour
         mainMenuButton.SetActive(false);
         quitGameButton.SetActive(false);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
