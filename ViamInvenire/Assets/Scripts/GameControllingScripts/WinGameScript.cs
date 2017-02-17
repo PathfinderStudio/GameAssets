@@ -20,6 +20,10 @@ public class WinGameScript : MonoBehaviour {
             if (other.tag == "Player")
             {
                 player.transform.GetChild(4).transform.GetChild(0).gameObject.SetActive(true);
+                player.transform.GetChild(4).transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false; // update these latter for get component in children
+                player.transform.GetChild(4).transform.GetChild(0).gameObject.transform.GetChild(1).gameObject.GetComponent<MeshRenderer>().enabled = false;
+                player.transform.GetChild(4).transform.GetChild(0).gameObject.transform.GetChild(2).gameObject.GetComponent<MeshRenderer>().enabled = false;
+                player.transform.GetChild(4).transform.GetChild(0).gameObject.transform.GetChild(3).gameObject.GetComponent<MeshRenderer>().enabled = false;
             }
         }
     }
