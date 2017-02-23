@@ -8,14 +8,14 @@ public class binocularControl : MonoBehaviour {
 	public GameObject view;
 	public Camera binocularCamera;
 	public float sensitivity;
-
 	public GameObject mainCharacter;
 
 	private float scrollValue;
 	private int maxZoomOut;
 	private int maxZoomIn;
-	// Use this for initialization
-	void Start () 
+    private bool playerHolding = false;
+    // Use this for initialization
+    void Start () 
 	{
 		maxZoomOut = 60;
 		maxZoomIn = 5;
@@ -60,7 +60,15 @@ public class binocularControl : MonoBehaviour {
 				}
 			}
 		}
-
-
 	}
+
+    private void itemPickedUp(bool input)
+    {
+        playerHolding = input;
+    }
+
+    public bool isPlayerHolding()
+    {
+        return playerHolding;
+    }
 }

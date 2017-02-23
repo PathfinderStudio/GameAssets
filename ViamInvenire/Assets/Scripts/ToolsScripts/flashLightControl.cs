@@ -14,9 +14,10 @@ public class flashLightControl : MonoBehaviour {
 	private int minSpotAngle;
 	private Light flashLight;
 	private float scrollValue;
+    private bool playerHolding = false;
 
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    void Start()
 	{
 		maxIntensity = 6;
 		minIntensity = 2;
@@ -36,7 +37,12 @@ public class flashLightControl : MonoBehaviour {
 		{
 			adjustLight (); 
 		}
-	}
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && this.gameObject.GetComponent<MeshRenderer>().enabled)
+        {
+            flashLight.enabled = !flashLight.enabled;
+        }
+    }
 
 	/// <summary>
 	/// Adjusts the light intensity and spotangle.
@@ -70,4 +76,14 @@ public class flashLightControl : MonoBehaviour {
 			}
 		}
 	}
+
+    private void itemPickedUp(bool input)
+    {
+        playerHolding = input;
+    }
+
+    public bool isPlayerHolding()
+    {
+        return playerHolding;
+    }
 }
