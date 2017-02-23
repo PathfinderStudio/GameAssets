@@ -36,7 +36,12 @@ public class flashLightControl : MonoBehaviour {
 		{
 			adjustLight (); 
 		}
-	}
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            flashLight.enabled = !flashLight.enabled;
+        }
+    }
 
 	/// <summary>
 	/// Adjusts the light intensity and spotangle.
