@@ -90,6 +90,7 @@ public class PickupObjectsScript : MonoBehaviour
         if(canPickup && (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E)))
         {
             this.transform.GetChild(itemToPickup).gameObject.SetActive(true);
+            Destroy(hit.collider.gameObject);
             //Change this script to address tool object prototype and set their bool
             //to true that it has been obtained
         }
