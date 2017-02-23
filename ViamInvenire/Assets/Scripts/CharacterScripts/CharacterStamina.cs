@@ -44,7 +44,11 @@ public class CharacterStamina : MonoBehaviour
             running = false;
         }
         //If the player is running bring down his stamina
-        if(running)
+        if(Input.GetKeyDown(KeyCode.Space) && running)
+        {
+            currentTimeRunning += burnRate * Time.deltaTime * 10; //this is a test to make jumping burn more stamina
+        }
+        else if(running)
         {
             currentTimeRunning += burnRate * Time.deltaTime;
         }
