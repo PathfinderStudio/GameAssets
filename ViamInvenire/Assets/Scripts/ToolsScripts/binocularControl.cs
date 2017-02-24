@@ -31,13 +31,15 @@ public class binocularControl : MonoBehaviour {
 				view.gameObject.SetActive (false);
 				binocularCamera.enabled = false;
 				mainCharacter.SendMessage ("switchEnabled", true, SendMessageOptions.DontRequireReceiver);
+                mainCharacter.SendMessage("SetCanMove", true, SendMessageOptions.DontRequireReceiver);
 			} 
 			else
 			{
 				view.gameObject.SetActive (true);
 				binocularCamera.enabled = true;
 				mainCharacter.SendMessage ("switchEnabled", false, SendMessageOptions.DontRequireReceiver);
-			}
+                mainCharacter.SendMessage("SetCanMove", false, SendMessageOptions.DontRequireReceiver);
+            }
 		}
 
 		scrollValue = Input.GetAxis ("Mouse ScrollWheel");

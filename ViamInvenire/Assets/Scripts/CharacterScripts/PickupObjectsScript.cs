@@ -11,6 +11,7 @@ public class PickupObjectsScript : MonoBehaviour
     private int binocularsIndex;
     private int flaregunIndex;
     private int flashlightIndex;
+    private int flareIndex;
     private bool canPickup = false;
     private int itemToPickup;
 
@@ -37,6 +38,10 @@ public class PickupObjectsScript : MonoBehaviour
             else if (this.transform.GetChild(i).gameObject.tag == "Compass")
             {
                 compassIndex = i;
+            }
+            else if(this.transform.GetChild(i).gameObject.tag == "Flare")
+            {
+                flareIndex = i;
             }
         }
     }
@@ -76,10 +81,29 @@ public class PickupObjectsScript : MonoBehaviour
                 canPickup = true;
                 itemToPickup = compassIndex;
             }
-
-            glow.GetComponent<Light>().enabled = true;
-            glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward/10;
-            glow.GetComponent<Light>().intensity = 1.0f;
+            if (hit.collider.gameObject.tag == "Flare")
+            {
+                if(hit.collider.gameObject.GetComponent<emergencyFlareControl>() != null)
+                {
+                    glow.GetComponent<Light>().enabled = false;
+                }
+                else
+                {
+                    canPickup = true;
+                    itemToPickup = flareIndex;
+                    glow.GetComponent<Light>().enabled = true;
+                    glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward / 10;
+                    glow.GetComponent<Light>().intensity = 1.0f;
+                }
+            }
+            else
+            {
+                glow.GetComponent<Light>().enabled = true;
+                glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward / 10;
+                glow.GetComponent<Light>().intensity = 1.0f;
+            }
+            
+            
         }
         else
         {

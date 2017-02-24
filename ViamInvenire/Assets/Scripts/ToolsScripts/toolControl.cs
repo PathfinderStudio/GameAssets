@@ -2,74 +2,101 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class toolControl : MonoBehaviour {
+public class toolControl : MonoBehaviour
+{
 
-	private bool canSwitch;
+    private bool canSwitch;
     private int compassIndex;
     private int binocularsIndex;
     private int flaregunIndex;
     private int flashlightIndex;
+    private int emergencyFlareIndex;
+    private bool[] selected;
+
+    private enum Tools
+    {
+        EmergencyFlare,
+        Compass,
+        Flashlight,
+        Binoculars,
+        Flaregun
+    }
 
     // Use this for initialization
-    void Start () 
-	{
-		canSwitch = true;
-
+    void Start()
+    {
+        canSwitch = true;
+        selected = new bool[this.transform.childCount];
         for (int i = 0; i < this.transform.childCount; i++)
         {
             if (this.transform.GetChild(i).gameObject.tag == "Binoculars")
             {
                 binocularsIndex = i;
+                selected[(int)Tools.Binoculars] = false;
             }
             else if (this.transform.GetChild(i).gameObject.tag == "Flaregun")
             {
                 flaregunIndex = i;
+                selected[(int)Tools.Flaregun] = false;
             }
             else if (this.transform.GetChild(i).gameObject.tag == "Flashlight")
             {
                 flashlightIndex = i;
+                selected[(int)Tools.Flashlight] = false;
             }
             else if (this.transform.GetChild(i).gameObject.tag == "Compass")
             {
                 compassIndex = i;
+                selected[(int)Tools.Compass] = false;
+            }
+            else if (this.transform.GetChild(i).gameObject.tag == "Flare")
+            {
+                emergencyFlareIndex = i;
+                selected[(int)Tools.EmergencyFlare] = false;
+            }
+
+
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (canSwitch)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0)) // to select no item
+            {
+                switchItems(false, false, false, false, false, false);
+            }
+            else if(Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                switchItems(false, false, false, false, false, true);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) // to select compass
+            {
+                switchItems(true, false, false, false, false, false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) // to select flashlight
+            {
+                switchItems(false, true, true, false, false, false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4)) // to select binoculars
+            {
+                switchItems(false, false, false, true, false, false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5)) // to select flare gun
+            {
+                switchItems(false, false, false, false, true, false);
             }
         }
     }
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		if (canSwitch)
-		{
-			if (Input.GetKeyDown (KeyCode.Alpha0)) // to select no item
-			{
-                switchItems(false, false, false, false, false);
-            } 
-			else if (Input.GetKeyDown (KeyCode.Alpha1)) // to select compass
-			{
-                switchItems(true, false, false, false, false);
-            } 
-			else if (Input.GetKeyDown (KeyCode.Alpha2)) // to select flashlight
-			{
-                switchItems(false, true, true, false, false);
-            } 
-			else if (Input.GetKeyDown (KeyCode.Alpha3)) // to select binoculars
-			{
-                switchItems(false, false, false, true, false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4)) // to select flare gun
-            {
-                switchItems(false, false, false, false, true);
-            }
-        }
-	}
 
-	private void switchEnabled(bool value)
-	{
-		canSwitch = value;
-	}
+    private void switchEnabled(bool value)
+    {
+        canSwitch = value;
+    }
 
-    private void switchItems(bool compassActive, bool flashlightActice, bool flashLightOn, bool binocularsActive, bool flareGunActive)
+    private void switchItems(bool compassActive, bool flashlightActice, bool flashLightOn, bool binocularsActive, bool flareGunActive, bool emergencyFlareSelected)
     {
         //sets compass
         if (this.transform.GetChild(compassIndex).transform.GetChild(3).GetComponent<compassFollow>().isPlayerHolding())
@@ -78,7 +105,6 @@ public class toolControl : MonoBehaviour {
             this.transform.GetChild(compassIndex).transform.GetChild(3).transform.GetChild(2).GetComponentInChildren<MeshRenderer>().enabled = compassActive;
         }
 
-        Debug.Log(this.transform.GetChild(flashlightIndex).GetComponent<flashLightControl>().isPlayerHolding());
         //sets flashlight
         if (this.transform.GetChild(flashlightIndex).GetComponent<flashLightControl>().isPlayerHolding())
         {
@@ -97,6 +123,22 @@ public class toolControl : MonoBehaviour {
         {
             this.transform.GetChild(flaregunIndex).transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = flareGunActive;
         }
+
+        if(this.transform.GetChild(emergencyFlareIndex).GetComponent<emergencyFlareControl>().isPlayerHolding())
+        {
+            this.transform.GetChild(emergencyFlareIndex).gameObject.SetActive(emergencyFlareSelected);
+        }
     }
+
+    /*
+     * for(int i = 0; i < selected.Length; i++)
+        {
+            if(toolNum == i)
+            {
+                selected[i] = true;
+                this.transform.GetChild(toolChildIndex)
+            }
+        }
+        */
 
 }
