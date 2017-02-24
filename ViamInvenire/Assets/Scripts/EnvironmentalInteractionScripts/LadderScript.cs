@@ -16,18 +16,6 @@ public class LadderScript : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if(Time.timeScale != 0)
-        {
-            if(other.gameObject.tag == "Player")
-            {
-                
-
-            }
-        }
-    }
-
     private void OnTriggerExit(Collider col)
     {
         if(Time.timeScale != 0)

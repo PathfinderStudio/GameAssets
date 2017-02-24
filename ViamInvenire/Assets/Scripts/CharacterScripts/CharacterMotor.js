@@ -26,6 +26,7 @@ class CharacterMotorMovement {
     var maxBackwardsSpeed: float = 10.0;
     var canSprint: boolean = true;
     var climbing: boolean = false;
+    var canMove: boolean = true;
 
 	// Curve for multiplying speed based on slope (negative = downwards)
 	var slopeSpeedMultiplier : AnimationCurve = AnimationCurve(Keyframe(-90, 1), Keyframe(0, 1), Keyframe(90, 0));
@@ -198,23 +199,26 @@ private function UpdateFunction() {
         {
             movement.velocity *= 0.8;
         }
-        if (movement.canSprint) {
+        if (movement.canSprint && movement.canMove) {
             if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
                 movement.maxForwardSpeed = originalSpeed * 2;
                 movement.maxSidewaysSpeed = originalSpeed * 2;
                 movement.maxBackwardsSpeed = originalSpeed * 2;
             }
-            else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift)) {
+            else {
                 movement.maxForwardSpeed = originalSpeed;
                 movement.maxSidewaysSpeed = originalSpeed;
                 movement.maxBackwardsSpeed = originalSpeed;
             }
         }
-        else {
-            movement.maxForwardSpeed = originalSpeed;
-            movement.maxSidewaysSpeed = originalSpeed;
-            movement.maxBackwardsSpeed = originalSpeed;
+        if(!movement.canMove)
+        {
+            movement.maxForwardSpeed = 0;
+            movement.maxSidewaysSpeed = 0;
+            movement.maxBackwardsSpeed = 0;
         }
+        else    
+        {
         // We copy the actual velocity into a temporary variable that we can manipulate.
         var velocity: Vector3 = movement.velocity;
 
@@ -246,107 +250,108 @@ private function UpdateFunction() {
                 // Prevent rotation of the local up vector
                 tr.Rotate(0, yRotation, 0);
             }
-        }
 
-        // Save lastPosition for velocity calculation.
-        var lastPosition: Vector3 = tr.position;
+            // Save lastPosition for velocity calculation.
+            var lastPosition: Vector3 = tr.position;
 
-        // We always want the movement to be framerate independent.  Multiplying by Time.deltaTime does this.
-        var currentMovementOffset: Vector3 = velocity * Time.deltaTime;
+            // We always want the movement to be framerate independent.  Multiplying by Time.deltaTime does this.
+            var currentMovementOffset: Vector3 = velocity * Time.deltaTime;
 
-        // Find out how much we need to push towards the ground to avoid loosing grouning
-        // when walking down a step or over a sharp change in slope.
-        var pushDownOffset: float = Mathf.Max(controller.stepOffset, Vector3(currentMovementOffset.x, 0, currentMovementOffset.z).magnitude);
-        if (grounded)
-            currentMovementOffset -= pushDownOffset * Vector3.up;
+            // Find out how much we need to push towards the ground to avoid loosing grouning
+            // when walking down a step or over a sharp change in slope.
+            var pushDownOffset: float = Mathf.Max(controller.stepOffset, Vector3(currentMovementOffset.x, 0, currentMovementOffset.z).magnitude);
+            if (grounded)
+                currentMovementOffset -= pushDownOffset * Vector3.up;
 
-        // Reset variables that will be set by collision function
-        movingPlatform.hitPlatform = null;
-        groundNormal = Vector3.zero;
-       
 
-        // Move our character!
-        movement.collisionFlags = controller.Move(currentMovementOffset);
+            // Reset variables that will be set by collision function
+            movingPlatform.hitPlatform = null;
+            groundNormal = Vector3.zero;
 
-        movement.lastHitPoint = movement.hitPoint;
-        lastGroundNormal = groundNormal;
 
-        if (movingPlatform.enabled && movingPlatform.activePlatform != movingPlatform.hitPlatform) {
-            if (movingPlatform.hitPlatform != null) {
-                movingPlatform.activePlatform = movingPlatform.hitPlatform;
-                movingPlatform.lastMatrix = movingPlatform.hitPlatform.localToWorldMatrix;
-                movingPlatform.newPlatform = true;
+            // Move our character!
+            movement.collisionFlags = controller.Move(currentMovementOffset);
+
+            movement.lastHitPoint = movement.hitPoint;
+            lastGroundNormal = groundNormal;
+
+            if (movingPlatform.enabled && movingPlatform.activePlatform != movingPlatform.hitPlatform) {
+                if (movingPlatform.hitPlatform != null) {
+                    movingPlatform.activePlatform = movingPlatform.hitPlatform;
+                    movingPlatform.lastMatrix = movingPlatform.hitPlatform.localToWorldMatrix;
+                    movingPlatform.newPlatform = true;
+                }
             }
-        }
 
-        // Calculate the velocity based on the current and previous position.  
-        // This means our velocity will only be the amount the character actually moved as a result of collisions.
-        var oldHVelocity: Vector3 = new Vector3(velocity.x, 0, velocity.z);
-        movement.velocity = (tr.position - lastPosition) / Time.deltaTime;
-        var newHVelocity: Vector3 = new Vector3(movement.velocity.x, 0, movement.velocity.z);
+            // Calculate the velocity based on the current and previous position.  
+            // This means our velocity will only be the amount the character actually moved as a result of collisions.
+            var oldHVelocity: Vector3 = new Vector3(velocity.x, 0, velocity.z);
+            movement.velocity = (tr.position - lastPosition) / Time.deltaTime;
+            var newHVelocity: Vector3 = new Vector3(movement.velocity.x, 0, movement.velocity.z);
 
-        // The CharacterController can be moved in unwanted directions when colliding with things.
-        // We want to prevent this from influencing the recorded velocity.
-        if (oldHVelocity == Vector3.zero) {
-            movement.velocity = new Vector3(0, movement.velocity.y, 0);
-        }
-        else {
-            var projectedNewVelocity: float = Vector3.Dot(newHVelocity, oldHVelocity) / oldHVelocity.sqrMagnitude;
-            movement.velocity = oldHVelocity * Mathf.Clamp01(projectedNewVelocity) + movement.velocity.y * Vector3.up;
-        }
-
-        if (movement.velocity.y < velocity.y - 0.001) {
-            if (movement.velocity.y < 0) {
-                // Something is forcing the CharacterController down faster than it should.
-                // Ignore this
-                movement.velocity.y = velocity.y;
+            // The CharacterController can be moved in unwanted directions when colliding with things.
+            // We want to prevent this from influencing the recorded velocity.
+            if (oldHVelocity == Vector3.zero) {
+                movement.velocity = new Vector3(0, movement.velocity.y, 0);
             }
             else {
-                // The upwards movement of the CharacterController has been blocked.
-                // This is treated like a ceiling collision - stop further jumping here.
-                jumping.holdingJumpButton = false;
-            }
-        }
-
-        // We were grounded but just lost grounding
-        if (grounded && !IsGroundedTest()) {
-            grounded = false;
-
-            // Apply inertia from platform
-            if (movingPlatform.enabled &&
-                (movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
-                    movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
-            ) {
-                movement.frameVelocity = movingPlatform.platformVelocity;
-                movement.velocity += movingPlatform.platformVelocity;
+                var projectedNewVelocity: float = Vector3.Dot(newHVelocity, oldHVelocity) / oldHVelocity.sqrMagnitude;
+                movement.velocity = oldHVelocity * Mathf.Clamp01(projectedNewVelocity) + movement.velocity.y * Vector3.up;
             }
 
-            SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
-            // We pushed the character down to ensure it would stay on the ground if there was any.
-            // But there wasn't so now we cancel the downwards offset to make the fall smoother.
-            tr.position += pushDownOffset * Vector3.up;
-        }
-        // We were not grounded but just landed on something
-        else if (!grounded && IsGroundedTest()) {
-            timeFalling = 0;
-            movement.gravity = originalGravity;
-            grounded = true;
-            jumping.jumping = false;
-            SubtractNewPlatformVelocity();
+            if (movement.velocity.y < velocity.y - 0.001) {
+                if (movement.velocity.y < 0) {
+                    // Something is forcing the CharacterController down faster than it should.
+                    // Ignore this
+                    movement.velocity.y = velocity.y;
+                }
+                else {
+                    // The upwards movement of the CharacterController has been blocked.
+                    // This is treated like a ceiling collision - stop further jumping here.
+                    jumping.holdingJumpButton = false;
+                }
+            }
 
-            SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
-        }
+            // We were grounded but just lost grounding
+            if (grounded && !IsGroundedTest()) {
+                grounded = false;
 
-        // Moving platforms support
-        if (MoveWithPlatform()) {
-            // Use the center of the lower half sphere of the capsule as reference point.
-            // This works best when the character is standing on moving tilting platforms. 
-            movingPlatform.activeGlobalPoint = tr.position + Vector3.up * (controller.center.y - controller.height * 0.5 + controller.radius);
-            movingPlatform.activeLocalPoint = movingPlatform.activePlatform.InverseTransformPoint(movingPlatform.activeGlobalPoint);
+                // Apply inertia from platform
+                if (movingPlatform.enabled &&
+                    (movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
+                        movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
+                ) {
+                    movement.frameVelocity = movingPlatform.platformVelocity;
+                    movement.velocity += movingPlatform.platformVelocity;
+                }
 
-            // Support moving platform rotation as well:
-            movingPlatform.activeGlobalRotation = tr.rotation;
-            movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation;
+                SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
+                // We pushed the character down to ensure it would stay on the ground if there was any.
+                // But there wasn't so now we cancel the downwards offset to make the fall smoother.
+                tr.position += pushDownOffset * Vector3.up;
+            }
+                // We were not grounded but just landed on something
+            else if (!grounded && IsGroundedTest()) {
+                timeFalling = 0;
+                movement.gravity = originalGravity;
+                grounded = true;
+                jumping.jumping = false;
+                SubtractNewPlatformVelocity();
+
+                SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
+            }
+
+            // Moving platforms support
+            if (MoveWithPlatform()) {
+                // Use the center of the lower half sphere of the capsule as reference point.
+                // This works best when the character is standing on moving tilting platforms. 
+                movingPlatform.activeGlobalPoint = tr.position + Vector3.up * (controller.center.y - controller.height * 0.5 + controller.radius);
+                movingPlatform.activeLocalPoint = movingPlatform.activePlatform.InverseTransformPoint(movingPlatform.activeGlobalPoint);
+
+                // Support moving platform rotation as well:
+                movingPlatform.activeGlobalRotation = tr.rotation;
+                movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation;
+            }
         }
     }
 }
@@ -677,6 +682,9 @@ public function Climbing(isClimbing: boolean)
     {
         movement.gravity = originalGravity;
     }
+
+public function SetCanMove(canMove: boolean) {
+    movement.canMove = canMove;
 }
 
 // Require a character controller to be attached to the same game object
