@@ -20,6 +20,8 @@ public class emergencyFlareControl : MonoBehaviour
     private Vector3 throwRotation;
     private float rotationAmount;
     private bool playerHolding;
+    private bool flying;
+    private int bounceCount;
 
     // Use this for initialization
     void Start()
@@ -36,6 +38,8 @@ public class emergencyFlareControl : MonoBehaviour
         throwRotation = new Vector3(0, 0, 0);
         rotationAmount = 10f;
         playerHolding = true;
+        flying = false;
+        bounceCount = 0;
     }
 
     // Update is called once per frame
@@ -47,10 +51,12 @@ public class emergencyFlareControl : MonoBehaviour
             burnTime = 0;
             threwAFlare = false;
             theFlareThrown = null;
+            lit = false;
         }
         if (!lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
             amount--;
+            lit = true;
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
         }
@@ -86,6 +92,10 @@ public class emergencyFlareControl : MonoBehaviour
             //Destroy(this.gameObject);
             
         }
+        else if (!lit && amount == 0 && threwAFlare)
+        {
+            //Do something? Donno
+        }
         else if(!lit && amount == 0)
         {
             itemPickedUp(false);
@@ -100,10 +110,14 @@ public class emergencyFlareControl : MonoBehaviour
             lightComponent.SetActive(false);
         }
 
-        if(amount < 0)
+        if(flying)
         {
             this.transform.eulerAngles = throwRotation;
             throwRotation.x += rotationAmount;
+        }
+        if (bounceCount > 0)
+        {
+            SlowDown();
         }
     }
 
@@ -144,11 +158,17 @@ public class emergencyFlareControl : MonoBehaviour
         Vector3 throwDirection = camera.transform.forward;
         this.GetComponent<Rigidbody>().AddForce(throwDirection * throwDistance);
         this.GetComponent<CapsuleCollider>().enabled = true;
+        flying = true;
     }
 
     private void itemPickedUp(bool input)
     {
         playerHolding = input;
+        if(playerHolding)
+        {
+            IncreaseAmountOfFlares();
+        }
+        
     }
 
     public bool isPlayerHolding()
@@ -161,6 +181,26 @@ public class emergencyFlareControl : MonoBehaviour
         if(collision.gameObject.tag == "Ground")
         {
             rotationAmount = 0;
+            throwRotation = Vector3.zero;
+            flying = false;
+            bounceCount++;
+        }
+    }
+
+    /// <summary>
+    /// Increase number of flares being carried.
+    /// </summary>
+    private void IncreaseAmountOfFlares()
+    {
+        amount++;
+    }
+
+    void SlowDown()
+    {
+        this.GetComponent<Rigidbody>().velocity = this.GetComponent<Rigidbody>().velocity - this.GetComponent<Rigidbody>().velocity * Time.deltaTime;
+        if(Mathf.Abs(this.GetComponent<Rigidbody>().velocity.magnitude) < 0.01)
+        {
+            this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
     }
 }
