@@ -25,14 +25,14 @@ class CharacterMotorMovement {
 	var maxSidewaysSpeed : float = 10.0;
     var maxBackwardsSpeed: float = 10.0;
     var canSprint: boolean = true;
-
+    var climbing: boolean = false;
 
 	// Curve for multiplying speed based on slope (negative = downwards)
 	var slopeSpeedMultiplier : AnimationCurve = AnimationCurve(Keyframe(-90, 1), Keyframe(0, 1), Keyframe(90, 0));
 	
 	// How fast does the character change speeds?  Higher is faster.
 	var maxGroundAcceleration : float = 30.0;
-	var maxAirAcceleration : float = 0.0; // removed air control when at 0
+	var maxAirAcceleration : float = 0.0;                                  // removed air control when at 0
 
 	// The gravity for the character
 	var gravity : float = 10.0;
@@ -221,8 +221,13 @@ private function UpdateFunction() {
         // Update velocity based on input
         velocity = ApplyInputVelocityChange(velocity);
 
+        // Update the y velocity based on if player is on the ladder
+        velocity = ApplyLadders(velocity);
+
         // Apply gravity and jumping force
         velocity = ApplyGravityAndJumping(velocity);
+
+        
 
         // Moving platform support
         var moveDistance: Vector3 = Vector3.zero;
@@ -258,6 +263,7 @@ private function UpdateFunction() {
         // Reset variables that will be set by collision function
         movingPlatform.hitPlatform = null;
         groundNormal = Vector3.zero;
+       
 
         // Move our character!
         movement.collisionFlags = controller.Move(currentMovementOffset);
@@ -398,10 +404,11 @@ private function ApplyInputVelocityChange (velocity : Vector3) {
 	}
 	
 	if (grounded)
-		desiredVelocity = AdjustGroundVelocityToNormal(desiredVelocity, groundNormal);
+	    desiredVelocity = AdjustGroundVelocityToNormal(desiredVelocity, groundNormal);
 	else
-		velocity.y = 0;
-	
+	{
+	    velocity.y = 0;
+	}	
 	// Enforce max velocity change
 	var maxVelocityChange : float = GetMaxAcceleration(grounded) * Time.deltaTime;
 	var velocityChangeVector : Vector3 = (desiredVelocity - velocity);
@@ -432,72 +439,74 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 	
 	if (inputJump && jumping.lastButtonDownTime < 0 && canControl)
 		jumping.lastButtonDownTime = Time.time;
-	
-	if (grounded)
-		velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
-    else {
-        //if (timeFalling < 2.0 && velocity.y < 0) {
-        //    timeFalling += Time.deltaTime;
-        //}
-        //else if(velocity.y <0) {
-        //    movement.gravity += 15.0;
-        //}
-        movement.gravity += (movement.gravity * Time.deltaTime);
+	if(!movement.climbing)
+	{
+	    if (grounded)
+	        velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
+	    else {
+	        //if (timeFalling < 2.0 && velocity.y < 0) {
+	        //    timeFalling += Time.deltaTime;
+	        //}
+	        //else if(velocity.y <0) {
+	        //    movement.gravity += 15.0;
+	        //}
+	        movement.gravity += (movement.gravity * Time.deltaTime);
 
-		velocity.y = movement.velocity.y - movement.gravity * Time.deltaTime;
+	        velocity.y = movement.velocity.y - movement.gravity * Time.deltaTime;
         
-		// When jumping up we don't apply gravity for some time when the user is holding the jump button.
-		// This gives more control over jump height by pressing the button longer.
-		if (jumping.jumping && jumping.holdingJumpButton) {
-			// Calculate the duration that the extra jump force should have effect.
-			// If we're still less than that duration after the jumping time, apply the force.
-			if (Time.time < jumping.lastStartTime + jumping.extraHeight / CalculateJumpVerticalSpeed(jumping.baseHeight)) {
-				// Negate the gravity we just applied, except we push in jumpDir rather than jump upwards.
-				velocity += jumping.jumpDir * movement.gravity * Time.deltaTime;
-			}
-		}
+	        // When jumping up we don't apply gravity for some time when the user is holding the jump button.
+	        // This gives more control over jump height by pressing the button longer.
+	        if (jumping.jumping && jumping.holdingJumpButton) {
+	            // Calculate the duration that the extra jump force should have effect.
+	            // If we're still less than that duration after the jumping time, apply the force.
+	            if (Time.time < jumping.lastStartTime + jumping.extraHeight / CalculateJumpVerticalSpeed(jumping.baseHeight)) {
+	                // Negate the gravity we just applied, except we push in jumpDir rather than jump upwards.
+	                velocity += jumping.jumpDir * movement.gravity * Time.deltaTime;
+	            }
+	        }
 		
-		// Make sure we don't fall any faster than maxFallSpeed. This gives our character a terminal velocity.
-		velocity.y = Mathf.Max (velocity.y, -movement.maxFallSpeed);
-	}
+	        // Make sure we don't fall any faster than maxFallSpeed. This gives our character a terminal velocity.
+	        velocity.y = Mathf.Max (velocity.y, -movement.maxFallSpeed);
+	    }
 		
-	if (grounded) {
-		// Jump only if the jump button was pressed down in the last 0.2 seconds.
-		// We use this check instead of checking if it's pressed down right now
-		// because players will often try to jump in the exact moment when hitting the ground after a jump
-		// and if they hit the button a fraction of a second too soon and no new jump happens as a consequence,
-		// it's confusing and it feels like the game is buggy.
-		if (jumping.enabled && canControl && (Time.time - jumping.lastButtonDownTime < 0.2)) {
-			grounded = false;
-			jumping.jumping = true;
-			jumping.lastStartTime = Time.time;
-			jumping.lastButtonDownTime = -100;
-			jumping.holdingJumpButton = true;
+	    if (grounded) {
+	        // Jump only if the jump button was pressed down in the last 0.2 seconds.
+	        // We use this check instead of checking if it's pressed down right now
+	        // because players will often try to jump in the exact moment when hitting the ground after a jump
+	        // and if they hit the button a fraction of a second too soon and no new jump happens as a consequence,
+	        // it's confusing and it feels like the game is buggy.
+	        if (jumping.enabled && canControl && (Time.time - jumping.lastButtonDownTime < 0.2)) {
+	            grounded = false;
+	            jumping.jumping = true;
+	            jumping.lastStartTime = Time.time;
+	            jumping.lastButtonDownTime = -100;
+	            jumping.holdingJumpButton = true;
 			
-			// Calculate the jumping direction
-			if (TooSteep())
-				jumping.jumpDir = Vector3.Slerp(Vector3.up, groundNormal, jumping.steepPerpAmount);
-			else
-				jumping.jumpDir = Vector3.Slerp(Vector3.up, groundNormal, jumping.perpAmount);
+	            // Calculate the jumping direction
+	            if (TooSteep())
+	                jumping.jumpDir = Vector3.Slerp(Vector3.up, groundNormal, jumping.steepPerpAmount);
+	            else
+	                jumping.jumpDir = Vector3.Slerp(Vector3.up, groundNormal, jumping.perpAmount);
 			
-			// Apply the jumping force to the velocity. Cancel any vertical velocity first.
-			velocity.y = 0;
-			velocity += jumping.jumpDir * CalculateJumpVerticalSpeed (jumping.baseHeight);
+	            // Apply the jumping force to the velocity. Cancel any vertical velocity first.
+	            velocity.y = 0;
+	            velocity += jumping.jumpDir * CalculateJumpVerticalSpeed (jumping.baseHeight);
 			
-			// Apply inertia from platform
-			if (movingPlatform.enabled &&
-				(movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
-				movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
-			) {
-				movement.frameVelocity = movingPlatform.platformVelocity;
-				velocity += movingPlatform.platformVelocity;
-			}
+	            // Apply inertia from platform
+	            if (movingPlatform.enabled &&
+                    (movingPlatform.movementTransfer == MovementTransferOnJump.InitTransfer ||
+                    movingPlatform.movementTransfer == MovementTransferOnJump.PermaTransfer)
+                ) {
+	                movement.frameVelocity = movingPlatform.platformVelocity;
+	                velocity += movingPlatform.platformVelocity;
+	            }
 			
-			SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
-		}
-		else {
-			jumping.holdingJumpButton = false;
-		}
+	            SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
+	        }
+	        else {
+	            jumping.holdingJumpButton = false;
+	        }
+	    }
 	}
 	
 	return velocity;
@@ -629,6 +638,45 @@ function SetVelocity (velocity : Vector3) {
 
 public function SetCanRun(canRun: boolean) {
     movement.canSprint = canRun;
+}
+
+private function ApplyLadders (velocity : Vector3) {	
+
+    if(movement.climbing)
+    {
+        movement.maxAirAcceleration = 5.0;
+        grounded = true;
+        falling = false;
+        if(Input.GetAxis("Vertical") > 0)
+        {
+            velocity.y = 10;
+        }
+        else if(Input.GetAxis("Vertical") < 0)
+        {
+            velocity.y = -10;
+        }
+        else
+        {
+            velocity.y = 0;
+        }
+        
+    }
+    else
+    {
+        movement.maxAirAcceleration = 0.0;
+        //do nothing as he isn't climbing
+    }
+
+    return velocity;
+}
+
+public function Climbing(isClimbing: boolean)
+{
+    movement.climbing = isClimbing;
+    if(!movement.climbing)
+    {
+        movement.gravity = originalGravity;
+    }
 }
 
 // Require a character controller to be attached to the same game object
