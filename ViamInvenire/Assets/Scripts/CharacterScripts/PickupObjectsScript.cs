@@ -80,6 +80,10 @@ public class PickupObjectsScript : MonoBehaviour
             glow.GetComponent<Light>().enabled = true;
             glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward/10;
             glow.GetComponent<Light>().intensity = 1.0f;
+            if (hit.collider.gameObject.tag == "EmergencyFlare")
+            {
+                glow.GetComponent<Light>().enabled = false; //wrong right now
+            }
         }
         else
         {
