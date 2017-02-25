@@ -16,6 +16,8 @@ public class CharacterStamina : MonoBehaviour
     private bool tired;
     private bool running;
     private float minimumThreshold;
+    private Rect staminaRect;
+    private Texture2D staminaTexture;
 
 
     // Use this for initialization
@@ -25,6 +27,12 @@ public class CharacterStamina : MonoBehaviour
         tired = false;
         running = false;
         minimumThreshold = 3.5f;
+
+        //for drawing stamina bar
+        staminaRect = new Rect(Screen.width/2 - Screen.width/6, Screen.height/20, Screen.width/3, Screen.height/50);
+        staminaTexture = new Texture2D(1, 1);
+        staminaTexture.SetPixel(0, 0, Color.green);
+        staminaTexture.Apply();
     }
 
     // Update is called once per frame
@@ -85,5 +93,21 @@ public class CharacterStamina : MonoBehaviour
         currentTimeRunning = runTime;
         tired = true;
         SendMessage("SetCanRun", false, SendMessageOptions.DontRequireReceiver);
+    }
+
+    private void OnGUI()
+    {
+        float amountOfStam = (runTime - currentTimeRunning) / runTime;
+        if(amountOfStam < 1)
+        {
+            float width = amountOfStam * Screen.width / 3;
+            staminaRect.width = width;
+            GUI.DrawTexture(staminaRect, staminaTexture);
+        }
+        else
+        {
+            GUI.DrawTexture(Rect.zero, staminaTexture);
+        }
+        
     }
 }
