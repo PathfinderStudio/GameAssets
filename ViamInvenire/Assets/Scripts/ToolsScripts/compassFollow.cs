@@ -17,7 +17,7 @@ public class compassFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.transform.localRotation = Quaternion.Euler(new Vector3(0f, camera.transform.rotation.eulerAngles.y + 90, 0f)); // rotates it too point north
+        this.transform.localRotation = Quaternion.Euler(new Vector3(0f, -camera.transform.rotation.eulerAngles.y + 90, 0f)); // rotates it too point north
     }
 
     private void itemPickedUp(bool input)
