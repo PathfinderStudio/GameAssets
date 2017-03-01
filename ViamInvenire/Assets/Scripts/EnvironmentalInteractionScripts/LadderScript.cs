@@ -10,7 +10,6 @@ public class LadderScript : MonoBehaviour
         {
             if (col.gameObject.tag == "Player")
             {
-                Debug.Log("ON Ladder");
                 col.gameObject.SendMessage("Climbing", true, SendMessageOptions.DontRequireReceiver);
             }
         }
@@ -22,7 +21,6 @@ public class LadderScript : MonoBehaviour
         {
             if(col.gameObject.tag == "Player")
             {
-                Debug.Log("Off Ladder");
                 col.gameObject.SendMessage("Climbing", false, SendMessageOptions.DontRequireReceiver);
             }
         }
