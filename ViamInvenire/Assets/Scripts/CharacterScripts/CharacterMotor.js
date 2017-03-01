@@ -212,6 +212,12 @@ class CharacterMotorMovement {
                                             movement.maxSidewaysSpeed = originalSpeed;
                                             movement.maxBackwardsSpeed = originalSpeed;
                                         }
+                                        else
+                                        {
+                                            movement.maxForwardSpeed = originalSpeed;
+                                            movement.maxSidewaysSpeed = originalSpeed;
+                                            movement.maxBackwardsSpeed = originalSpeed;
+                                        }
                                     }
                                     else {
                                         movement.maxForwardSpeed = originalSpeed;
@@ -649,6 +655,7 @@ class CharacterMotorMovement {
                                                 public function SetCanMove(canMove: boolean)
                                                     {
                                                         movement.canMove = canMove;
+                                                        Debug.Log(movement.canMove);
                                                     }
 
                                                 public function SetCanRun(canRun: boolean) {
