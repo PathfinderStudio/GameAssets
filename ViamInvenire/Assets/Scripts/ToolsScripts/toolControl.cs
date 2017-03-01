@@ -12,6 +12,7 @@ public class toolControl : MonoBehaviour
     private int flashlightIndex;
     private int emergencyFlareIndex;
     private bool[] selected;
+    public GameObject InventoryUI;
 
     private enum Tools
     {
@@ -68,7 +69,7 @@ public class toolControl : MonoBehaviour
             {
                 switchItems(false, false, false, false, false, false);
             }
-            else if(Input.GetKeyDown(KeyCode.Alpha1))
+            else if(Input.GetKeyDown(KeyCode.Alpha1)) // to select flares
             {
                 switchItems(false, false, false, false, false, true);
             }
@@ -87,6 +88,11 @@ public class toolControl : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Alpha5)) // to select flare gun
             {
                 switchItems(false, false, false, false, true, false);
+            }
+            else if (Input.GetKeyDown(KeyCode.Tab)) //to show inventory
+            {
+                System.Console.WriteLine("Tab Pressed");
+                InventoryUI.GetComponent<InventoryUI>().showInventory();
             }
         }
     }
