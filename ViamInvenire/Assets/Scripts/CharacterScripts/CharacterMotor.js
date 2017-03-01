@@ -212,6 +212,12 @@ class CharacterMotorMovement {
                                             movement.maxSidewaysSpeed = originalSpeed;
                                             movement.maxBackwardsSpeed = originalSpeed;
                                         }
+                                        else
+                                        {
+                                            movement.maxForwardSpeed = originalSpeed;
+                                            movement.maxSidewaysSpeed = originalSpeed;
+                                            movement.maxBackwardsSpeed = originalSpeed;
+                                        }
                                     }
                                     else {
                                         movement.maxForwardSpeed = originalSpeed;
@@ -649,6 +655,7 @@ class CharacterMotorMovement {
                                                 public function SetCanMove(canMove: boolean)
                                                     {
                                                         movement.canMove = canMove;
+                                                        Debug.Log(movement.canMove);
                                                     }
 
                                                 public function SetCanRun(canRun: boolean) {
@@ -662,19 +669,9 @@ class CharacterMotorMovement {
                                                         movement.maxAirAcceleration = 5.0;
                                                         grounded = true;
                                                         falling = false;
-                                                        if(Input.GetAxis("Vertical") > 0)
-                                                        {
-                                                            velocity.y = 10;
-                                                        }
-                                                        else if(Input.GetAxis("Vertical") < 0)
-                                                        {
-                                                            velocity.y = -10;
-                                                        }
-                                                        else
-                                                        {
-                                                            velocity.y = 0;
-                                                        }
-   
+                                                        
+                                                        velocity.y = Input.GetAxis("Vertical") * 10;
+                                                        
                                                     }
                                                     else
                                                     {
@@ -690,6 +687,8 @@ class CharacterMotorMovement {
                                                         movement.climbing = isClimbing;
                                                         if(!movement.climbing)
                                                         {
+                                                            //grounded = false;
+                                                            //falling = true;
                                                             movement.gravity = originalGravity;
                                                         }
                                                     }
