@@ -22,7 +22,11 @@ public class PickupObjectsScript : MonoBehaviour
         glow.GetComponent<Light>().enabled = false;
         for(int i =0; i < this.transform.childCount; i++)
         {
-            this.transform.GetChild(i).gameObject.SetActive(false);
+            if(this.transform.GetChild(i).gameObject.tag != "Untagged")
+            {
+                this.transform.GetChild(i).gameObject.SetActive(false);
+
+            }
             if (this.transform.GetChild(i).gameObject.tag == "Binoculars")
             {
                 binocularsIndex = i;
