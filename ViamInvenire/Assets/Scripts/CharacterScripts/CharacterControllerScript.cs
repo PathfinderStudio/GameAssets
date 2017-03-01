@@ -19,6 +19,7 @@ public class CharacterControllerScript : MonoBehaviour
     private bool grounded;
     private float jumpHoldTime;
     private float frictionForce;
+    
 
     // Use this for initialization
     void Start()
