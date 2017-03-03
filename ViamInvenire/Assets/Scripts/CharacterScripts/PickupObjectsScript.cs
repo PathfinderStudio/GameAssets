@@ -6,6 +6,7 @@ public class PickupObjectsScript : MonoBehaviour
 {
     public GameObject glow;
 
+    private toolControl toolControl;
     public GameObject InventoryUI;
 
     private float maxDist = 3f;
@@ -20,6 +21,7 @@ public class PickupObjectsScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        toolControl = this.gameObject.GetComponent<toolControl>();
         glow.SetActive(true);
         glow.GetComponent<Light>().enabled = false;
         for(int i =0; i < this.transform.childCount; i++)
@@ -27,7 +29,6 @@ public class PickupObjectsScript : MonoBehaviour
             if(this.transform.GetChild(i).gameObject.tag != "Untagged")
             {
                 this.transform.GetChild(i).gameObject.SetActive(false);
-
             }
             if (this.transform.GetChild(i).gameObject.tag == "Binoculars")
             {
@@ -121,6 +122,27 @@ public class PickupObjectsScript : MonoBehaviour
         if(canPickup && (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E)))
         {
             this.transform.GetChild(itemToPickup).gameObject.SetActive(true);
+            if (this.transform.GetChild(itemToPickup).tag == "Compass") //use compass
+            {
+                toolControl.switchItems(true, false, false, false, false, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Binoculars") //using binoculars
+            {
+                toolControl.switchItems(false, false, false, true, false, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Flashlight") //using flashlight
+            {
+                toolControl.switchItems(false, true, true, false, false, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Flaregun") //using flaregun
+            {
+                toolControl.switchItems(false, false, false, false, true, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Flare") //use flare
+            {
+                toolControl.switchItems(false, false, false, false, false, true);
+            }
+
             this.transform.GetChild(itemToPickup).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             Destroy(hit.collider.gameObject);
             InventoryUI.GetComponent<InventoryUI>().AddItem(hit.collider.gameObject);

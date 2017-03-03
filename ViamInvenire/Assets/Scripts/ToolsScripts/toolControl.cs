@@ -102,7 +102,7 @@ public class toolControl : MonoBehaviour
         canSwitch = value;
     }
 
-    private void switchItems(bool compassActive, bool flashlightActice, bool flashLightOn, bool binocularsActive, bool flareGunActive, bool emergencyFlareSelected)
+    public void switchItems(bool compassActive, bool flashlightActice, bool flashLightOn, bool binocularsActive, bool flareGunActive, bool emergencyFlareSelected)
     {
         //sets compass
         if (this.transform.GetChild(compassIndex).transform.GetChild(3).GetComponent<compassFollow>().isPlayerHolding())
@@ -135,16 +135,5 @@ public class toolControl : MonoBehaviour
             this.transform.GetChild(emergencyFlareIndex).gameObject.SetActive(emergencyFlareSelected);
         }
     }
-
-    /*
-     * for(int i = 0; i < selected.Length; i++)
-        {
-            if(toolNum == i)
-            {
-                selected[i] = true;
-                this.transform.GetChild(toolChildIndex)
-            }
-        }
-        */
 
 }
