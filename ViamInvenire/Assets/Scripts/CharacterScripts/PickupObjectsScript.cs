@@ -122,8 +122,9 @@ public class PickupObjectsScript : MonoBehaviour
         {
             this.transform.GetChild(itemToPickup).gameObject.SetActive(true);
             this.transform.GetChild(itemToPickup).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
-            Destroy(hit.collider.gameObject);
             InventoryUI.GetComponent<InventoryUI>().AddItem(hit.collider.gameObject);
+            Destroy(hit.collider.gameObject);
+            
             //Change this script to address tool object prototype and set their bool
             //to true that it has been obtained
         }
