@@ -6,6 +6,8 @@ public class PickupObjectsScript : MonoBehaviour
 {
     public GameObject glow;
 
+    public GameObject InventoryUI;
+
     private float maxDist = 3f;
     private int compassIndex;
     private int binocularsIndex;
@@ -66,6 +68,7 @@ public class PickupObjectsScript : MonoBehaviour
             {
                 canPickup = true;
                 itemToPickup = binocularsIndex;
+
             }
             else if(hit.collider.gameObject.tag == "Flaregun")
             {
@@ -106,8 +109,8 @@ public class PickupObjectsScript : MonoBehaviour
                 glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward / 10;
                 glow.GetComponent<Light>().intensity = 1.0f;
             }
-            
-            
+
+
         }
         else
         {
@@ -120,6 +123,7 @@ public class PickupObjectsScript : MonoBehaviour
             this.transform.GetChild(itemToPickup).gameObject.SetActive(true);
             this.transform.GetChild(itemToPickup).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             Destroy(hit.collider.gameObject);
+            InventoryUI.GetComponent<InventoryUI>().AddItem(hit.collider.gameObject);
             //Change this script to address tool object prototype and set their bool
             //to true that it has been obtained
         }

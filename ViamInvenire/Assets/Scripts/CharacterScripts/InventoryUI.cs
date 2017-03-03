@@ -14,8 +14,8 @@ public class InventoryUI : MonoBehaviour
     {
         for(int i = 0; i < numInventorySlots; i++)
         {
-            InventorySlots[i].SetActive(true);
-            inventoryImages[i].enabled = true;
+            InventorySlots[i].SetActive(false);
+            inventoryImages[i].enabled = false;
         }
         GetComponent<CanvasGroup>().alpha = 0;
     }
