@@ -6,6 +6,7 @@ public class PickupObjectsScript : MonoBehaviour
 {
     public GameObject glow;
 
+    private toolControl toolControl;
     public GameObject InventoryUI;
 
     private float maxDist = 3f;
@@ -16,18 +17,20 @@ public class PickupObjectsScript : MonoBehaviour
     private int flareIndex;
     private bool canPickup = false;
     private int itemToPickup;
+    private bool lightUp;
 
     // Use this for initialization
     void Start()
     {
+        toolControl = this.gameObject.GetComponent<toolControl>();
         glow.SetActive(true);
         glow.GetComponent<Light>().enabled = false;
-        for(int i =0; i < this.transform.childCount; i++)
+        lightUp = false;
+        for (int i = 0; i < this.transform.childCount; i++)
         {
-            if(this.transform.GetChild(i).gameObject.tag != "Untagged")
+            if (this.transform.GetChild(i).gameObject.tag != "Untagged")
             {
                 this.transform.GetChild(i).gameObject.SetActive(false);
-
             }
             if (this.transform.GetChild(i).gameObject.tag == "Binoculars")
             {
@@ -45,7 +48,7 @@ public class PickupObjectsScript : MonoBehaviour
             {
                 compassIndex = i;
             }
-            else if(this.transform.GetChild(i).gameObject.tag == "Flare")
+            else if (this.transform.GetChild(i).gameObject.tag == "Flare")
             {
                 flareIndex = i;
             }
@@ -64,67 +67,93 @@ public class PickupObjectsScript : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxDist, layer))
         {
-            if(hit.collider.gameObject.tag == "Binoculars")
+            
+
+            if (hit.collider.gameObject.tag == "Binoculars")
             {
                 canPickup = true;
                 itemToPickup = binocularsIndex;
-
+                lightUp = true;
             }
-            else if(hit.collider.gameObject.tag == "Flaregun")
+            else if (hit.collider.gameObject.tag == "Flaregun")
             {
                 canPickup = true;
                 itemToPickup = flaregunIndex;
-
+                lightUp = true;
             }
             else if (hit.collider.gameObject.tag == "Flashlight")
             {
 
                 canPickup = true;
                 itemToPickup = flashlightIndex;
-
+                lightUp = true;
             }
             else if (hit.collider.gameObject.tag == "Compass")
             {
                 canPickup = true;
                 itemToPickup = compassIndex;
+                lightUp = true;
             }
-            if (hit.collider.gameObject.tag == "Flare")
+            else if (hit.collider.gameObject.tag == "Flare")
             {
-                if(hit.collider.gameObject.GetComponent<emergencyFlareControl>() != null)
+                if (hit.collider.gameObject.GetComponent<emergencyFlareControl>() != null)
                 {
+                    canPickup = false;
                     glow.GetComponent<Light>().enabled = false;
+                    lightUp = false;
                 }
                 else
                 {
                     canPickup = true;
                     itemToPickup = flareIndex;
-                    glow.GetComponent<Light>().enabled = true;
-                    glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward / 10;
-                    glow.GetComponent<Light>().intensity = 1.0f;
+                    lightUp = true;
                 }
+                
             }
-            else
+            if(lightUp)
             {
                 glow.GetComponent<Light>().enabled = true;
                 glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward / 10;
                 glow.GetComponent<Light>().intensity = 1.0f;
             }
-
-
+            
         }
         else
         {
             canPickup = false;
             glow.GetComponent<Light>().enabled = false;
+            lightUp = false;
         }
 
-        if(canPickup && (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E)))
+        if (canPickup && (Input.GetKeyDown(KeyCode.E) || Input.GetKey(KeyCode.E)))
         {
             this.transform.GetChild(itemToPickup).gameObject.SetActive(true);
+            if (this.transform.GetChild(itemToPickup).tag == "Compass") //use compass
+            {
+                toolControl.switchItems(true, false, false, false, false, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Binoculars") //using binoculars
+            {
+                toolControl.switchItems(false, false, false, true, false, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Flashlight") //using flashlight
+            {
+                toolControl.switchItems(false, true, true, false, false, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Flaregun") //using flaregun
+            {
+                toolControl.switchItems(false, false, false, false, true, false);
+            }
+            else if (this.transform.GetChild(itemToPickup).tag == "Flare") //use flare
+            {
+                toolControl.switchItems(false, false, false, false, false, true);
+            }
+
             this.transform.GetChild(itemToPickup).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             InventoryUI.GetComponent<InventoryUI>().AddItem(hit.collider.gameObject);
+            SendMessage("UpdateTutorialText", SendMessageOptions.DontRequireReceiver);
             Destroy(hit.collider.gameObject);
-            
+
             //Change this script to address tool object prototype and set their bool
             //to true that it has been obtained
         }

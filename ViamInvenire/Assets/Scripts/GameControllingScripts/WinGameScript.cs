@@ -32,9 +32,9 @@ public class WinGameScript : MonoBehaviour {
             if (other.tag == "Player")
             {
                 player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.SetActive(true);
-                for(int i = 0; i < player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.childCount; i++)
+                for(int i = 0; i < player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.childCount-1; i++)
                 {
-                    player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = false;
+                    player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
                 }
 
                 //player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false; // update these latter for get component in children

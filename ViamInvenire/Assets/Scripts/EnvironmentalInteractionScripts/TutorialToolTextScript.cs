@@ -5,6 +5,7 @@ using UnityEngine;
 public class TutorialToolTextScript : MonoBehaviour
 {
     private GameObject player;
+    private static int count = 0;
 
     // Use this for initialization
     void Start()
@@ -17,15 +18,24 @@ public class TutorialToolTextScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.transform.LookAt(player.transform, Vector3.up);
-        
+        Debug.Log(count);
+        if (count == 0)
+        {
+            this.transform.LookAt(player.transform, Vector3.up);
+        }
+        else
+        {
+            this.GetComponent<MeshRenderer>().enabled = false;
+
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (Time.timeScale != 0)
         {
-            if(other.tag == "Player")
+            if (other.tag == "Player" && count == 0)
             {
                 this.GetComponent<MeshRenderer>().enabled = true;
 
@@ -37,10 +47,15 @@ public class TutorialToolTextScript : MonoBehaviour
     {
         if (Time.timeScale != 0)
         {
-            if (other.tag == "Player")
+            if (other.tag == "Player" && count == 0)
             {
                 this.GetComponent<MeshRenderer>().enabled = false;
             }
         }
+    }
+
+    public void UpdateTutorialText()
+    {
+        count++;
     }
 }

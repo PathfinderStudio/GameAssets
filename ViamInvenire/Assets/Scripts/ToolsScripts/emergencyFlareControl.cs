@@ -193,6 +193,7 @@ public class emergencyFlareControl : MonoBehaviour
     private void IncreaseAmountOfFlares()
     {
         amount++;
+
     }
 
     void SlowDown()
