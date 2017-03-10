@@ -671,6 +671,7 @@ class CharacterMotorMovement {
                                                             falling = false;
                                                         
                                                             velocity.y = Input.GetAxis("Vertical") * 10;
+
                                                         
                                                         }
                                                         else
