@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class emergencyFlareControl : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class emergencyFlareControl : MonoBehaviour
     private bool flying;
     private int bounceCount;
 
+    public GameObject iconCounter;
+
     // Use this for initialization
     void Start()
     {
@@ -40,6 +43,7 @@ public class emergencyFlareControl : MonoBehaviour
         playerHolding = true;
         flying = false;
         bounceCount = 0;
+        iconCounter.SendMessage("SetAmount", SendMessageOptions.DontRequireReceiver);
     }
 
     // Update is called once per frame
@@ -56,6 +60,7 @@ public class emergencyFlareControl : MonoBehaviour
         if (!lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
             amount--;
+            iconCounter.SendMessage("DecrementAmount", SendMessageOptions.DontRequireReceiver);
             lit = true;
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
@@ -77,6 +82,7 @@ public class emergencyFlareControl : MonoBehaviour
         if(!lit && amount > 0 && Input.GetKeyDown(KeyCode.Mouse0))
         {
             amount--;
+            iconCounter.SendMessage("DecrementAmount", SendMessageOptions.DontRequireReceiver);
             lit = true;
             LightFlare();
         }
@@ -159,6 +165,7 @@ public class emergencyFlareControl : MonoBehaviour
         this.GetComponent<Rigidbody>().AddForce(throwDirection * throwDistance);
         this.GetComponent<CapsuleCollider>().enabled = true;
         flying = true;
+        //iconCounter.SendMessage("DecrementAmount", SendMessageOptions.DontRequireReceiver);
     }
 
     private void itemPickedUp(bool input)
@@ -193,6 +200,7 @@ public class emergencyFlareControl : MonoBehaviour
     private void IncreaseAmountOfFlares()
     {
         amount++;
+        iconCounter.SendMessage("IncrementAmount", SendMessageOptions.DontRequireReceiver);
 
     }
 
