@@ -18,7 +18,7 @@ public class TutorialToolTextScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(count);
+       // Debug.Log(count);
         if (count == 0)
         {
             this.transform.LookAt(player.transform, Vector3.up);
