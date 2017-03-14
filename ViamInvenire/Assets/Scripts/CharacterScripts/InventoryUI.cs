@@ -12,7 +12,7 @@ public class InventoryUI : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        for(int i = 0; i < numInventorySlots; i++)
+        for(int i = 1; i < numInventorySlots; i++)
         {
             InventorySlots[i].SetActive(false);
             inventoryImages[i].enabled = false;
