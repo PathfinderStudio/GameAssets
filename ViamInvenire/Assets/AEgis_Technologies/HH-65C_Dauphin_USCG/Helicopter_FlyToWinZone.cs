@@ -27,6 +27,8 @@ public class Helicopter_FlyToWinZone : MonoBehaviour {
     private float circleAngleTraversed;
     private float speedDecreaseFactor;
     private float descentRate = 20.0f;
+
+    private bool positiveRoll = false;
     
 	// Use this for initialization
 	void Start()
