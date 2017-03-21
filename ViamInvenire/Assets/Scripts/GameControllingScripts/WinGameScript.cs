@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class WinGameScript : MonoBehaviour {
 
     private GameObject player;
     private int flareGunIndex;
+    public GameObject flareGunToSpawn;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -22,6 +25,11 @@ public class WinGameScript : MonoBehaviour {
             }
         }
         player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.SetActive(false);
+        System.Random rand = new System.Random();
+        rand.Next();
+        Vector3 motionToMove = new Vector3(rand.Next(5), 0, rand.Next(5));
+        GameObject thing = Instantiate(flareGunToSpawn, this.transform.position + motionToMove, Quaternion.identity);
+        thing.transform.Rotate(new Vector3(0, 0, 60));
     }
 
 
@@ -31,11 +39,12 @@ public class WinGameScript : MonoBehaviour {
         {
             if (other.tag == "Player")
             {
-                player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.SetActive(true);
+                /*player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.SetActive(true);
                 for(int i = 0; i < player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.childCount-1; i++)
                 {
                     player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = true;
-                }
+                    
+                }*/
 
                 //player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().enabled = false; // update these latter for get component in children
                 //player.transform.GetChild(4).transform.GetChild(flareGunIndex).gameObject.transform.GetChild(1).gameObject.GetComponent<MeshRenderer>().enabled = false;
