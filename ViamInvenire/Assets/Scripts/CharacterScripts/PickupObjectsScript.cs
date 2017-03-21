@@ -131,6 +131,7 @@ public class PickupObjectsScript : MonoBehaviour
             if (this.transform.GetChild(itemToPickup).tag == "Compass") //use compass
             {
                 toolControl.switchItems(true, false, false, false, false, false);
+                this.transform.GetChild(itemToPickup).GetChild(3).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             }
             else if (this.transform.GetChild(itemToPickup).tag == "Binoculars") //using binoculars
             {
@@ -151,7 +152,13 @@ public class PickupObjectsScript : MonoBehaviour
 
             this.transform.GetChild(itemToPickup).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             InventoryUI.GetComponent<InventoryUI>().AddItem(hit.collider.gameObject);
-            SendMessage("UpdateTutorialText", SendMessageOptions.DontRequireReceiver);
+            for(int i = 0; i < hit.transform.childCount; i++)
+            {
+                if(hit.transform.GetChild(i).tag == "TutorialText")
+                {
+                    hit.transform.GetChild(i).SendMessage("UpdateTutorialText", SendMessageOptions.DontRequireReceiver);
+                }
+            }
             Destroy(hit.collider.gameObject);
 
             //Change this script to address tool object prototype and set their bool

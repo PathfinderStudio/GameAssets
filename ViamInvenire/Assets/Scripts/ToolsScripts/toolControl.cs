@@ -107,8 +107,10 @@ public class toolControl : MonoBehaviour
         //sets compass
         if (this.transform.GetChild(compassIndex).transform.GetChild(3).GetComponent<compassFollow>().isPlayerHolding())
         {
-            this.transform.GetChild(compassIndex).GetComponentInChildren<MeshRenderer>().enabled = compassActive;
-            this.transform.GetChild(compassIndex).transform.GetChild(3).transform.GetChild(2).GetComponentInChildren<MeshRenderer>().enabled = compassActive;
+            this.transform.GetChild(compassIndex).gameObject.SetActive(compassActive);
+            //this.transform.GetChild(compassIndex).transform.GetChild(2).transform.GetChild(0).GetComponent<MeshRenderer>().enabled = compassActive;
+            //this.transform.GetChild(compassIndex).GetComponentInChildren<MeshRenderer>().enabled = compassActive;
+            
         }
 
         //sets flashlight

@@ -15,11 +15,14 @@ public class flaregun : MonoBehaviour
     public int spareRounds = 3;
     public int currentRound = 0;
 
+    private GameObject GameManager;
+
     private bool playerHolding = false;
 
     // Use this for initialization
     void Start()
     {
+        GameManager = GameObject.FindGameObjectWithTag("GameManager");
     }
 
     // Update is called once per frame
@@ -30,6 +33,8 @@ public class flaregun : MonoBehaviour
             if (currentRound > 0)
             {
                 Shoot();
+                GameManager.SendMessage("ActivateRescueHelicopter", SendMessageOptions.DontRequireReceiver);
+                Debug.Log("Calling helicopter script");
             }
             else
             {
