@@ -49,7 +49,7 @@ public class emergencyFlareControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(threwAFlare)
+        if (threwAFlare)
         {
             theFlareThrown.GetComponent<emergencyFlareControl>().SetThrownVariables(burnTime, burnRate, throwDistance);
             burnTime = 0;
@@ -79,44 +79,44 @@ public class emergencyFlareControl : MonoBehaviour
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
         }
-        if(!lit && amount > 0 && Input.GetKeyDown(KeyCode.Mouse0))
+        if (!lit && amount > 0 && Input.GetKeyDown(KeyCode.Mouse0))
         {
             amount--;
             iconCounter.SendMessage("DecrementAmount", SendMessageOptions.DontRequireReceiver);
             lit = true;
             LightFlare();
         }
-        else if(lit)
+        else if (lit)
         {
             burnTime -= burnRate * Time.deltaTime;
         }
 
-        if(burnTime < 0 && amount <= 0)
+        if (burnTime < 0 && amount <= 0)
         {
             itemPickedUp(false);
             this.gameObject.SetActive(false);
             //Destroy(this.gameObject);
-            
+
         }
         else if (!lit && amount == 0 && threwAFlare)
         {
             //Do something? Donno
         }
-        else if(!lit && amount == 0)
+        else if (!lit && amount == 0)
         {
             itemPickedUp(false);
             this.gameObject.SetActive(false);
             //Destroy(this.gameObject, 1f * Time.deltaTime);
 
         }
-        else if(burnTime == 0 && amount > 0)
+        else if (burnTime == 0 && amount > 0)
         {
             burnTime = originalBurnTime;
             lit = false;
             lightComponent.SetActive(false);
         }
 
-        if(flying)
+        if (flying)
         {
             this.transform.eulerAngles = throwRotation;
             throwRotation.x += rotationAmount;
@@ -127,14 +127,14 @@ public class emergencyFlareControl : MonoBehaviour
         }
     }
 
-    
+
 
     /// <summary>
     /// Method to throw a flare object.
     /// </summary>
     private GameObject ThrowFlare()
     {
-        GameObject thrownFlare = Instantiate(flareToThrow, this.transform.position + this.transform.parent.transform.parent.GetComponent<Collider>().bounds.size/2, Quaternion.identity);
+        GameObject thrownFlare = Instantiate(flareToThrow, this.transform.position + this.transform.parent.transform.parent.GetComponent<Collider>().bounds.size / 2, Quaternion.identity);
         return thrownFlare;
     }
 
@@ -171,11 +171,11 @@ public class emergencyFlareControl : MonoBehaviour
     private void itemPickedUp(bool input)
     {
         playerHolding = input;
-        if(playerHolding)
+        if (playerHolding)
         {
             IncreaseAmountOfFlares();
         }
-        
+
     }
 
     public bool isPlayerHolding()
@@ -185,7 +185,7 @@ public class emergencyFlareControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "Ground")
         {
             rotationAmount = 0;
             throwRotation = Vector3.zero;
@@ -207,7 +207,7 @@ public class emergencyFlareControl : MonoBehaviour
     void SlowDown()
     {
         this.GetComponent<Rigidbody>().velocity = this.GetComponent<Rigidbody>().velocity - this.GetComponent<Rigidbody>().velocity * Time.deltaTime;
-        if(Mathf.Abs(this.GetComponent<Rigidbody>().velocity.magnitude) < 0.01)
+        if (Mathf.Abs(this.GetComponent<Rigidbody>().velocity.magnitude) < 0.01)
         {
             this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
