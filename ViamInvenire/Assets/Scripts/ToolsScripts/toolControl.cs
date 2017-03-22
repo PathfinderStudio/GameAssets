@@ -58,6 +58,8 @@ public class toolControl : MonoBehaviour
 
 
         }
+
+        switchItems(false, false, false, false, false, false);
     }
 
     // Update is called once per frame
