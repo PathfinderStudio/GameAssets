@@ -51,6 +51,7 @@ public class PickupObjectsScript : MonoBehaviour
             else if (this.transform.GetChild(i).gameObject.tag == "Flare")
             {
                 flareIndex = i;
+                this.transform.GetChild(i).gameObject.SetActive(true);
             }
         }
     }
