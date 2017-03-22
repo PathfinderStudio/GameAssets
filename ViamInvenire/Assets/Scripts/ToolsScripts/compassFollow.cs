@@ -11,7 +11,7 @@ public class compassFollow : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        playerHolding = false;
+        //playerHolding = false;
     }
 
     // Update is called once per frame
@@ -20,7 +20,7 @@ public class compassFollow : MonoBehaviour
         this.transform.localRotation = Quaternion.Euler(new Vector3(0f, -camera.transform.rotation.eulerAngles.y + 90, 0f)); // rotates it too point north
     }
 
-    private void itemPickedUp(bool input)
+    public void itemPickedUp(bool input)
     {
         playerHolding = input;
     }
