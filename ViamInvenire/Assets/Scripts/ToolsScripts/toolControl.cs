@@ -129,10 +129,15 @@ public class toolControl : MonoBehaviour
         }
 
         //sets flaregun
+        if(this.transform.GetChild(flaregunIndex).GetComponent<flaregun>().isPlayerHolding())
+        {
+            this.transform.GetChild(flaregunIndex).gameObject.SetActive(flareGunActive);
+        }
+        /*
         for (int i = 0; i < this.transform.GetChild(flaregunIndex).childCount - 1; i++) // -1 for barellend not having a meshrender
         {
             this.transform.GetChild(flaregunIndex).transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = flareGunActive;
-        }
+        }*/
 
         if(this.transform.GetChild(emergencyFlareIndex).GetComponent<emergencyFlareControl>().isPlayerHolding())
         {
