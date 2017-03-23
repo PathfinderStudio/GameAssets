@@ -16,6 +16,8 @@ public class MouseAimCamera : MonoBehaviour {
 	private float lookVertical;
 	private float lookHorizontal;
 
+    private float amountToMultiplyBy;
+
     private void Start()
     {
         if(GetComponent<Rigidbody>())
@@ -28,14 +30,15 @@ public class MouseAimCamera : MonoBehaviour {
     //Based off mouselook script of GreenForest asset pack
     void Update()
     {
+        amountToMultiplyBy = Mathf.Clamp(Time.deltaTime, 0, 0.03f);  //clamping attempting to prevent frame skips
         if(this.tag == "Player")
         {
-            lookHorizontal = this.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * speedX * Time.deltaTime;
+            lookHorizontal = this.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * speedX * amountToMultiplyBy;            
             this.transform.localEulerAngles = new Vector3(0, lookHorizontal, 0);
         }
         else if(this.tag == "MainCamera")
         {
-            lookVertical += Input.GetAxis("Mouse Y") * speedY * -1 * Time.deltaTime;
+            lookVertical += Input.GetAxis("Mouse Y") * speedY * -1 * amountToMultiplyBy;
             lookVertical = Mathf.Clamp(lookVertical, minY, maxY);
             this.transform.localEulerAngles = new Vector3(lookVertical, 0, 0);
         }

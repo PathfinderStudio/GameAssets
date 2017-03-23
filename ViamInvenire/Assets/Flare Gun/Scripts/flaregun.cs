@@ -82,7 +82,7 @@ public class flaregun : MonoBehaviour
 
     }
 
-    private void itemPickedUp(bool input)
+    public void itemPickedUp(bool input)
     {
         playerHolding = input;
     }

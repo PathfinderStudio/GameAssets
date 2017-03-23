@@ -51,6 +51,7 @@ public class PickupObjectsScript : MonoBehaviour
             else if (this.transform.GetChild(i).gameObject.tag == "Flare")
             {
                 flareIndex = i;
+                this.transform.GetChild(i).gameObject.SetActive(true);
             }
         }
     }
@@ -67,7 +68,7 @@ public class PickupObjectsScript : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, maxDist, layer))
         {
-            
+
 
             if (hit.collider.gameObject.tag == "Binoculars")
             {
@@ -108,15 +109,15 @@ public class PickupObjectsScript : MonoBehaviour
                     itemToPickup = flareIndex;
                     lightUp = true;
                 }
-                
+
             }
-            if(lightUp)
+            if (lightUp)
             {
                 glow.GetComponent<Light>().enabled = true;
                 glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward / 10;
                 glow.GetComponent<Light>().intensity = 1.0f;
             }
-            
+
         }
         else
         {
@@ -152,9 +153,9 @@ public class PickupObjectsScript : MonoBehaviour
 
             this.transform.GetChild(itemToPickup).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             InventoryUI.GetComponent<InventoryUI>().AddItem(hit.collider.gameObject);
-            for(int i = 0; i < hit.transform.childCount; i++)
+            for (int i = 0; i < hit.transform.childCount; i++)
             {
-                if(hit.transform.GetChild(i).tag == "TutorialText")
+                if (hit.transform.GetChild(i).tag == "TutorialText")
                 {
                     hit.transform.GetChild(i).SendMessage("UpdateTutorialText", SendMessageOptions.DontRequireReceiver);
                 }

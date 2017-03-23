@@ -58,6 +58,8 @@ public class toolControl : MonoBehaviour
 
 
         }
+
+        switchItems(false, false, false, false, false, false);
     }
 
     // Update is called once per frame
@@ -69,7 +71,7 @@ public class toolControl : MonoBehaviour
             {
                 switchItems(false, false, false, false, false, false);
             }
-            else if(Input.GetKeyDown(KeyCode.Alpha1)) // to select flares
+            else if (Input.GetKeyDown(KeyCode.Alpha1)) // to select flares
             {
                 switchItems(false, false, false, false, false, true);
             }
@@ -110,7 +112,7 @@ public class toolControl : MonoBehaviour
             this.transform.GetChild(compassIndex).gameObject.SetActive(compassActive);
             //this.transform.GetChild(compassIndex).transform.GetChild(2).transform.GetChild(0).GetComponent<MeshRenderer>().enabled = compassActive;
             //this.transform.GetChild(compassIndex).GetComponentInChildren<MeshRenderer>().enabled = compassActive;
-            
+
         }
 
         //sets flashlight
@@ -127,12 +129,17 @@ public class toolControl : MonoBehaviour
         }
 
         //sets flaregun
+        if(this.transform.GetChild(flaregunIndex).GetComponent<flaregun>().isPlayerHolding())
+        {
+            this.transform.GetChild(flaregunIndex).gameObject.SetActive(flareGunActive);
+        }
+        /*
         for (int i = 0; i < this.transform.GetChild(flaregunIndex).childCount - 1; i++) // -1 for barellend not having a meshrender
         {
             this.transform.GetChild(flaregunIndex).transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = flareGunActive;
-        }
+        }*/
 
-        if(this.transform.GetChild(emergencyFlareIndex).GetComponent<emergencyFlareControl>().isPlayerHolding())
+        if (this.transform.GetChild(emergencyFlareIndex).GetComponent<emergencyFlareControl>().isPlayerHolding())
         {
             this.transform.GetChild(emergencyFlareIndex).gameObject.SetActive(emergencyFlareSelected);
         }
