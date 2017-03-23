@@ -65,11 +65,10 @@ public class PickupObjectsScript : MonoBehaviour
         int layer = mask << LayerMask.NameToLayer("Tools");
         //Vector3 viewportPosition = Camera.main.WorldToViewportPoint(new Vector3(Screen.width/2, Screen.height/2, 0));
         Ray ray = new Ray(this.transform.position, this.transform.forward);
-
-        if (Physics.Raycast(ray, out hit, maxDist, layer))
+        float radius = 1.0f;
+        //Physics.Raycast(ray, out hit, maxDist, layer)
+        if (Physics.CapsuleCast(this.transform.position, this.transform.position, radius, this.transform.forward, out hit, maxDist, layer))
         {
-
-
             if (hit.collider.gameObject.tag == "Binoculars")
             {
                 canPickup = true;
