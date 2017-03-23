@@ -93,13 +93,12 @@ public class toolControl : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.Tab)) //to show inventory
             {
-                System.Console.WriteLine("Tab Pressed");
                 InventoryUI.GetComponent<InventoryUI>().showInventory();
             }
         }
     }
 
-    private void switchEnabled(bool value)
+    public void switchEnabled(bool value)
     {
         canSwitch = value;
     }
