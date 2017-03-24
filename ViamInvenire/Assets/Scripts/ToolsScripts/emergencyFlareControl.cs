@@ -9,10 +9,11 @@ public class emergencyFlareControl : MonoBehaviour
     public float burnTime = 1000f;
     public float burnRate = 10f;
     public float throwDistance = 2000.0f;
+    public GameObject iconCounter;
+
 
     private float originalBurnTime;
     private int amount;
-
     private bool lit;
     private GameObject lightComponent;
     private GameObject camera;
@@ -23,8 +24,8 @@ public class emergencyFlareControl : MonoBehaviour
     private bool playerHolding;
     private bool flying;
     private int bounceCount;
+    private AudioSource soundSource;
 
-    public GameObject iconCounter;
 
     // Use this for initialization
     void Start()
@@ -43,19 +44,23 @@ public class emergencyFlareControl : MonoBehaviour
         playerHolding = true;
         flying = false;
         bounceCount = 0;
+        soundSource = this.GetComponent<AudioSource>();
+        soundSource.playOnAwake = false;
         iconCounter.SendMessage("SetAmount", SendMessageOptions.DontRequireReceiver);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(threwAFlare)
+
+        if (threwAFlare)
         {
             theFlareThrown.GetComponent<emergencyFlareControl>().SetThrownVariables(burnTime, burnRate, throwDistance);
             burnTime = 0;
             threwAFlare = false;
             theFlareThrown = null;
             lit = false;
+            
         }
         if (!lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
@@ -64,6 +69,7 @@ public class emergencyFlareControl : MonoBehaviour
             lit = true;
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
+            
         }
         else if (lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
@@ -71,6 +77,7 @@ public class emergencyFlareControl : MonoBehaviour
             burnTime = 0;
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
+
         }
         else if (lit && amount == 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
@@ -78,45 +85,47 @@ public class emergencyFlareControl : MonoBehaviour
             //burnTime = 0;
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
+
         }
-        if(!lit && amount > 0 && Input.GetKeyDown(KeyCode.Mouse0))
+        if (!lit && amount > 0 && Input.GetKeyDown(KeyCode.Mouse0))
         {
+            Application.OpenURL("https://youtu.be/U1ei5rwO7ZI"); //great song
             amount--;
             iconCounter.SendMessage("DecrementAmount", SendMessageOptions.DontRequireReceiver);
             lit = true;
             LightFlare();
         }
-        else if(lit)
+        else if (lit)
         {
             burnTime -= burnRate * Time.deltaTime;
         }
 
-        if(burnTime < 0 && amount <= 0)
+        if (burnTime < 0 && amount <= 0)
         {
             itemPickedUp(false);
             this.gameObject.SetActive(false);
-            //Destroy(this.gameObject);
-            
+
+
         }
         else if (!lit && amount == 0 && threwAFlare)
         {
             //Do something? Donno
         }
-        else if(!lit && amount == 0)
+        else if (!lit && amount == 0)
         {
             itemPickedUp(false);
             this.gameObject.SetActive(false);
             //Destroy(this.gameObject, 1f * Time.deltaTime);
 
         }
-        else if(burnTime == 0 && amount > 0)
+        else if (burnTime == 0 && amount > 0)
         {
             burnTime = originalBurnTime;
             lit = false;
             lightComponent.SetActive(false);
         }
 
-        if(flying)
+        if (flying)
         {
             this.transform.eulerAngles = throwRotation;
             throwRotation.x += rotationAmount;
@@ -127,14 +136,42 @@ public class emergencyFlareControl : MonoBehaviour
         }
     }
 
-    
+    /// <summary>
+    /// Create an image at the location of where the flare lands.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    private IEnumerator makeImage(string url)
+    {
+        Texture2D tex;
+        tex = new Texture2D(4, 4, TextureFormat.DXT1, false);
+        WWW www = new WWW(url);
+        yield return www;
+        www.LoadImageIntoTexture(tex);
+        this.transform.GetChild(1).GetComponent<MeshRenderer>().material.mainTexture = tex;
+    }
+
+    /// <summary>
+    /// Create a sound at the location of where the flare flys.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    private void playSound()
+    {
+        //string url
+        //WWW www = new WWW(url);
+        soundSource.loop = true;
+        //soundSource.clip = www.GetAudioClip(true, false);
+        soundSource.time = 0.81f * soundSource.clip.length;
+        soundSource.Play();
+    }
 
     /// <summary>
     /// Method to throw a flare object.
     /// </summary>
     private GameObject ThrowFlare()
     {
-        GameObject thrownFlare = Instantiate(flareToThrow, this.transform.position + this.transform.parent.transform.parent.GetComponent<Collider>().bounds.size/2, Quaternion.identity);
+        GameObject thrownFlare = Instantiate(flareToThrow, this.transform.position + this.transform.parent.transform.parent.GetComponent<Collider>().bounds.size / 2, Quaternion.identity);
         return thrownFlare;
     }
 
@@ -165,17 +202,17 @@ public class emergencyFlareControl : MonoBehaviour
         this.GetComponent<Rigidbody>().AddForce(throwDirection * throwDistance);
         this.GetComponent<CapsuleCollider>().enabled = true;
         flying = true;
-        //iconCounter.SendMessage("DecrementAmount", SendMessageOptions.DontRequireReceiver);
+        playSound();
     }
 
     private void itemPickedUp(bool input)
     {
         playerHolding = input;
-        if(playerHolding)
+        if (playerHolding)
         {
             IncreaseAmountOfFlares();
         }
-        
+
     }
 
     public bool isPlayerHolding()
@@ -185,12 +222,13 @@ public class emergencyFlareControl : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "Ground")
         {
             rotationAmount = 0;
             throwRotation = Vector3.zero;
             flying = false;
             bounceCount++;
+            //StartCoroutine(makeImage("http://www.pageresource.com/png/var/albums/nature/fire/big-fire-ball-explosion-png-image.png"));
         }
     }
 
@@ -207,7 +245,7 @@ public class emergencyFlareControl : MonoBehaviour
     void SlowDown()
     {
         this.GetComponent<Rigidbody>().velocity = this.GetComponent<Rigidbody>().velocity - this.GetComponent<Rigidbody>().velocity * Time.deltaTime;
-        if(Mathf.Abs(this.GetComponent<Rigidbody>().velocity.magnitude) < 0.01)
+        if (Mathf.Abs(this.GetComponent<Rigidbody>().velocity.magnitude) < 0.01)
         {
             this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }

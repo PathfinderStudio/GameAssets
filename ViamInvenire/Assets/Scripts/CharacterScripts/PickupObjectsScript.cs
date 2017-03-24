@@ -51,6 +51,7 @@ public class PickupObjectsScript : MonoBehaviour
             else if (this.transform.GetChild(i).gameObject.tag == "Flare")
             {
                 flareIndex = i;
+                this.transform.GetChild(i).gameObject.SetActive(true);
             }
         }
     }
@@ -64,11 +65,10 @@ public class PickupObjectsScript : MonoBehaviour
         int layer = mask << LayerMask.NameToLayer("Tools");
         //Vector3 viewportPosition = Camera.main.WorldToViewportPoint(new Vector3(Screen.width/2, Screen.height/2, 0));
         Ray ray = new Ray(this.transform.position, this.transform.forward);
-
-        if (Physics.Raycast(ray, out hit, maxDist, layer))
+        float radius = 1.0f;
+        //Physics.Raycast(ray, out hit, maxDist, layer)
+        if (Physics.CapsuleCast(this.transform.position, this.transform.position, radius, this.transform.forward, out hit, maxDist, layer))
         {
-            
-
             if (hit.collider.gameObject.tag == "Binoculars")
             {
                 canPickup = true;
@@ -108,15 +108,15 @@ public class PickupObjectsScript : MonoBehaviour
                     itemToPickup = flareIndex;
                     lightUp = true;
                 }
-                
+
             }
-            if(lightUp)
+            if (lightUp)
             {
                 glow.GetComponent<Light>().enabled = true;
                 glow.transform.position = hit.collider.gameObject.transform.position + this.transform.forward / 10;
                 glow.GetComponent<Light>().intensity = 1.0f;
             }
-            
+
         }
         else
         {
@@ -152,9 +152,9 @@ public class PickupObjectsScript : MonoBehaviour
 
             this.transform.GetChild(itemToPickup).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             InventoryUI.GetComponent<InventoryUI>().AddItem(hit.collider.gameObject);
-            for(int i = 0; i < hit.transform.childCount; i++)
+            for (int i = 0; i < hit.transform.childCount; i++)
             {
-                if(hit.transform.GetChild(i).tag == "TutorialText")
+                if (hit.transform.GetChild(i).tag == "TutorialText")
                 {
                     hit.transform.GetChild(i).SendMessage("UpdateTutorialText", SendMessageOptions.DontRequireReceiver);
                 }

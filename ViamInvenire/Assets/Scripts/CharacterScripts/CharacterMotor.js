@@ -230,6 +230,7 @@ class CharacterMotorMovement {
                                         movement.maxForwardSpeed = 0;
                                         movement.maxSidewaysSpeed = 0;
                                         movement.maxBackwardsSpeed = 0;
+                                        movement.velocity *= 0.8;
                                     }
                                     // We copy the actual velocity into a temporary variable that we can manipulate.
                                     var velocity: Vector3 = movement.velocity;
@@ -655,7 +656,7 @@ class CharacterMotorMovement {
                                                     public function SetCanMove(canMove: boolean)
                                                         {
                                                             movement.canMove = canMove;
-                                                            Debug.Log(movement.canMove);
+                                                            
                                                         }
 
                                                     public function SetCanRun(canRun: boolean) {

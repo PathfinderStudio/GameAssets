@@ -14,6 +14,7 @@ public class binocularControl : MonoBehaviour {
     public float minSensitivity = 40;
 
     private MouseAimCamera aimCamera;
+    private GameObject mainCam;
     private float sensitivityChangeAmount;
     private float scrollValue;
 	private float maxSensitivity;
@@ -21,6 +22,7 @@ public class binocularControl : MonoBehaviour {
     // Use this for initialization
     void Start () 
 	{
+        mainCam = GameObject.FindGameObjectWithTag("MainCamera");
         aimCamera = binocularCamera.transform.parent.transform.parent.GetComponent<MouseAimCamera>();
         maxSensitivity = aimCamera.speedX;
         sensitivityChangeAmount = (maxSensitivity - minSensitivity) / (maxZoomOut - maxZoomIn);
@@ -37,14 +39,14 @@ public class binocularControl : MonoBehaviour {
                 aimCamera.speedY = maxSensitivity;
                 view.gameObject.SetActive (false);
 				binocularCamera.enabled = false;
-				mainCharacter.SendMessage ("switchEnabled", true, SendMessageOptions.DontRequireReceiver);
+				mainCam.SendMessage ("switchEnabled", true, SendMessageOptions.DontRequireReceiver);
                 mainCharacter.SendMessage("SetCanMove", true, SendMessageOptions.DontRequireReceiver);
 			} 
 			else
 			{
 				view.gameObject.SetActive (true);
 				binocularCamera.enabled = true;
-				mainCharacter.SendMessage ("switchEnabled", false, SendMessageOptions.DontRequireReceiver);
+				mainCam.SendMessage ("switchEnabled", false, SendMessageOptions.DontRequireReceiver);
                 mainCharacter.SendMessage("SetCanMove", false, SendMessageOptions.DontRequireReceiver);
             }
 		}
@@ -85,7 +87,7 @@ public class binocularControl : MonoBehaviour {
 		}
 	}
 
-    private void itemPickedUp(bool input)
+    public void itemPickedUp(bool input)
     {
         playerHolding = input;
     }
