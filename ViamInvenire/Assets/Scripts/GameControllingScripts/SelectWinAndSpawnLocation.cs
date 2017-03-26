@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class SelectWinAndSpawnLocation : MonoBehaviour
 {
+    [Header("DEBUG ONLY: Use this if you want to force buddy to spawn at a particular spawn location")]
+    public Boolean forceCertainSpawn = false;
+    [Header("DEBUG ONLY: Index of buddy's forced spawn. Zero based.")]
+    public int forceSpawnIndex;
+
     [Header("Spawn Location Container")]
     public GameObject spawnLocCont;
 
@@ -31,8 +36,24 @@ public class SelectWinAndSpawnLocation : MonoBehaviour
         index = randIndex.Next(spawnLocCont.transform.childCount);
         spawnLocCont.transform.GetChild(index).gameObject.SetActive(true);
         winLocCont.transform.GetChild(index).gameObject.SetActive(true);
+
         toolsSpawnLoc.transform.GetChild(index).gameObject.SetActive(true);
         toolsSpawnLoc.transform.GetChild(index).gameObject.GetComponent<SpawnToolsScript>().BeginSpawning();
+
+        if(forceCertainSpawn)
+        {
+            index = randIndex.Next(spawnLocCont.transform.childCount);
+            spawnLocCont.transform.GetChild(index).gameObject.SetActive(false);
+            winLocCont.transform.GetChild(index).gameObject.SetActive(false);
+            forceSpawn();
+        }
+    }
+
+    void forceSpawn()
+    {
+        index = forceSpawnIndex;
+        spawnLocCont.transform.GetChild(index).gameObject.SetActive(true);
+        winLocCont.transform.GetChild(index).gameObject.SetActive(true);
     }
 
 }

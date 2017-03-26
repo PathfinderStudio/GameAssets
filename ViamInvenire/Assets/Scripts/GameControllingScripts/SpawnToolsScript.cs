@@ -11,6 +11,8 @@ public class SpawnToolsScript : MonoBehaviour
     public GameObject binos;
     public GameObject emergencyFlare;
 
+    public int numberOfToolsToSpawn = 6;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -22,26 +24,35 @@ public class SpawnToolsScript : MonoBehaviour
 
     public void BeginSpawning()
     {
-        for(int i = 0; i < this.transform.childCount; i++)
+        for(int i = 0; i < numberOfToolsToSpawn; i++)
         {
             if(i < 3)
             {
                 if(i == 0)
                 {
-                    Instantiate(compass, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform.parent);
+                    //compass.transform.position = this.transform.GetChild(i).transform.position;
+                    //compass.transform.rotation = this.transform.GetChild(i).transform.rotation;
+                    //compass.transform.parent = this.transform.GetChild(i).transform.parent;
+                    Instantiate(compass, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform);
                 }
                 else if(i == 1)
                 {
-                    Instantiate(flashlight, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform.parent);
+                    //flashlight.transform.position = this.transform.GetChild(i).transform.position;
+                    //flashlight.transform.rotation = this.transform.GetChild(i).transform.rotation;
+                    //.transform.parent = this.transform.GetChild(i).transform.parent;
+                    Instantiate(flashlight, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform);
                 }
                 else if(i == 2)
                 {
-                    Instantiate(binos, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform.parent);
+                    //binos.transform.position = this.transform.GetChild(i).transform.position;
+                    //binos.transform.rotation = this.transform.GetChild(i).transform.rotation;
+                    //binos.transform.parent = this.transform.GetChild(i).transform.parent;
+                    Instantiate(binos, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform);
                 }
             }
             else
             {
-                Instantiate(emergencyFlare, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform.parent);
+                Instantiate(emergencyFlare, this.transform.GetChild(i).transform.position, this.transform.GetChild(i).transform.rotation, this.transform.GetChild(i).transform);
             }
         }
     }
