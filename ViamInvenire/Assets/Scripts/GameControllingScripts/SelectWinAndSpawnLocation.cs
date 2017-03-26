@@ -11,6 +11,9 @@ public class SelectWinAndSpawnLocation : MonoBehaviour
     [Header("Win Location Container")]
     public GameObject winLocCont;
 
+    [Header("Container For Tool Spawn Locations")]
+    public GameObject toolsSpawnLoc;
+
     //Use a random number to pick where the player should initially spawn.
     private System.Random randIndex;
     private int index;
@@ -23,10 +26,13 @@ public class SelectWinAndSpawnLocation : MonoBehaviour
         {
             spawnLocCont.transform.GetChild(i).gameObject.SetActive(false);
             winLocCont.transform.GetChild(i).gameObject.SetActive(false);
+            toolsSpawnLoc.transform.GetChild(i).gameObject.SetActive(false);
         }
         index = randIndex.Next(spawnLocCont.transform.childCount);
         spawnLocCont.transform.GetChild(index).gameObject.SetActive(true);
         winLocCont.transform.GetChild(index).gameObject.SetActive(true);
+        toolsSpawnLoc.transform.GetChild(index).gameObject.SetActive(true);
+        toolsSpawnLoc.transform.GetChild(index).gameObject.GetComponent<SpawnToolsScript>().BeginSpawning();
     }
 
 }
