@@ -11,6 +11,8 @@ public class toolControl : MonoBehaviour
     private int flaregunIndex;
     private int flashlightIndex;
     private int emergencyFlareIndex;
+    private int mapIndex;
+    private MapState mapState;
     private bool[] selected;
     public GameObject InventoryUI;
 
@@ -21,6 +23,13 @@ public class toolControl : MonoBehaviour
         Flashlight,
         Binoculars,
         Flaregun
+    }
+
+    private enum MapState
+    {
+        PutAway,
+        LowPosition,
+        RaisedPosition
     }
 
     // Use this for initialization
@@ -55,10 +64,15 @@ public class toolControl : MonoBehaviour
                 emergencyFlareIndex = i;
                 selected[(int)Tools.EmergencyFlare] = false;
             }
+            else if (this.transform.GetChild(i).gameObject.tag == "Map")
+            {
+                mapIndex = i;
+            }
 
 
         }
-
+        mapState = MapState.PutAway;
+        this.transform.GetChild(mapIndex).SendMessage("SetMapState", (int)mapState, SendMessageOptions.DontRequireReceiver);
         switchItems(false, false, false, false, false, false);
     }
 
@@ -95,6 +109,29 @@ public class toolControl : MonoBehaviour
             {
                 InventoryUI.GetComponent<InventoryUI>().showInventory();
             }
+            else if(Input.GetKeyUp(KeyCode.M))
+            {
+                if(mapState == MapState.PutAway)
+                {
+                    mapState = MapState.LowPosition;
+                    this.transform.GetChild(mapIndex).gameObject.SendMessage("SetMapState", (int)mapState, SendMessageOptions.DontRequireReceiver);
+                    this.transform.GetChild(mapIndex).gameObject.SetActive(true);
+                }
+                else if(mapState == MapState.LowPosition)
+                {
+                    mapState = MapState.RaisedPosition;
+                    this.transform.GetChild(mapIndex).gameObject.SendMessage("SetMapState", (int)mapState, SendMessageOptions.DontRequireReceiver);
+                    //remember last item that was out before making map big
+                    switchItems(false, false, false, false, false, false);
+                }
+                else if(mapState == MapState.RaisedPosition)
+                {
+                    mapState = MapState.PutAway;
+                    this.transform.GetChild(mapIndex).gameObject.SendMessage("SetMapState", (int)mapState, SendMessageOptions.DontRequireReceiver);
+                    this.transform.GetChild(mapIndex).gameObject.SetActive(false);
+                }
+                
+            }
         }
     }
 
@@ -103,6 +140,16 @@ public class toolControl : MonoBehaviour
         canSwitch = value;
     }
 
+    /// <summary>
+    /// Determines which item to switch to and sets other inactive.
+    /// </summary>
+    /// <param name="compassActive"></param>
+    /// <param name="flashlightActice"></param>
+    /// <param name="flashLightOn"></param>
+    /// <param name="binocularsActive"></param>
+    /// <param name="flareGunActive"></param>
+    /// <param name="emergencyFlareSelected"></param>
+    /// <param name="mapSelected"></param>
     public void switchItems(bool compassActive, bool flashlightActice, bool flashLightOn, bool binocularsActive, bool flareGunActive, bool emergencyFlareSelected)
     {
         //sets compass
@@ -111,7 +158,6 @@ public class toolControl : MonoBehaviour
             this.transform.GetChild(compassIndex).gameObject.SetActive(compassActive);
             //this.transform.GetChild(compassIndex).transform.GetChild(2).transform.GetChild(0).GetComponent<MeshRenderer>().enabled = compassActive;
             //this.transform.GetChild(compassIndex).GetComponentInChildren<MeshRenderer>().enabled = compassActive;
-
         }
 
         //sets flashlight
@@ -125,6 +171,10 @@ public class toolControl : MonoBehaviour
         if (this.transform.GetChild(binocularsIndex).GetComponent<binocularControl>().isPlayerHolding())
         {
             this.transform.GetChild(binocularsIndex).gameObject.SetActive(binocularsActive);
+            if(this.transform.GetChild(mapIndex).gameObject.activeInHierarchy)
+            {
+                this.transform.GetChild(mapIndex).gameObject.SendMessage("viewBusy", binocularsActive, SendMessageOptions.DontRequireReceiver); //if the binoculars are in use don't allow map to be visible
+            }
         }
 
         //sets flaregun
@@ -132,12 +182,8 @@ public class toolControl : MonoBehaviour
         {
             this.transform.GetChild(flaregunIndex).gameObject.SetActive(flareGunActive);
         }
-        /*
-        for (int i = 0; i < this.transform.GetChild(flaregunIndex).childCount - 1; i++) // -1 for barellend not having a meshrender
-        {
-            this.transform.GetChild(flaregunIndex).transform.GetChild(i).gameObject.GetComponent<MeshRenderer>().enabled = flareGunActive;
-        }*/
-
+        
+        //set emergency flares
         if (this.transform.GetChild(emergencyFlareIndex).GetComponent<emergencyFlareControl>().isPlayerHolding())
         {
             this.transform.GetChild(emergencyFlareIndex).gameObject.SetActive(emergencyFlareSelected);
