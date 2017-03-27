@@ -42,13 +42,13 @@ public class CharacterStamina : MonoBehaviour
         //check to see if the player is running
         if (!tired && (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && canMove)
         {
-            if (Input.GetAxis("Vertical") > 0 || Input.GetAxis("Horizontal") > 0) //checks that you are actualy moving to set running to true
+            if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0) //checks that you are actualy moving to set running to true
             {
-                running = true;
+                running = false;
             }
             else
             {
-                running = false;
+                running = true;
             }
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
