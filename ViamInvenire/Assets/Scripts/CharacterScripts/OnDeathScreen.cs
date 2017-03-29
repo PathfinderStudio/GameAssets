@@ -20,7 +20,7 @@ public class OnDeathScreen : MonoBehaviour
         restartButton.SetActive(false);
         mainMenuButton.SetActive(false);
         quitGameButton.SetActive(false);
-        alpha = 2.0f;
+        alpha = 1.0f;
         fine = false;
     }
 
@@ -29,7 +29,7 @@ public class OnDeathScreen : MonoBehaviour
     {
         if (this.enabled && !fine)
         {
-            this.GetComponent<Image>().color += new Color(0.0f, 0.0f, 0.0f, alpha) * Time.deltaTime;
+            this.GetComponent<Image>().color += new Color(0.0f, 0.0f, 0.0f, alpha);
             if (this.GetComponent<Image>().color.a > 1.0f)
             {
                 fine = true;
