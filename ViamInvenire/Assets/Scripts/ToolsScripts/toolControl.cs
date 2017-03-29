@@ -171,7 +171,7 @@ public class toolControl : MonoBehaviour
         if (this.transform.GetChild(binocularsIndex).GetComponent<binocularControl>().isPlayerHolding())
         {
             this.transform.GetChild(binocularsIndex).gameObject.SetActive(binocularsActive);
-            if(this.transform.GetChild(mapIndex).gameObject.activeInHierarchy)
+            if(this.transform.GetChild(mapIndex).gameObject.activeInHierarchy && this.transform.GetChild(binocularsIndex).gameObject.GetComponent<binocularControl>().binocularCamera.enabled)
             {
                 this.transform.GetChild(mapIndex).gameObject.SendMessage("viewBusy", binocularsActive, SendMessageOptions.DontRequireReceiver); //if the binoculars are in use don't allow map to be visible
             }
