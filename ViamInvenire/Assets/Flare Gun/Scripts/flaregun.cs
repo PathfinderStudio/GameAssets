@@ -16,6 +16,7 @@ public class flaregun : MonoBehaviour
     public int currentRound = 0;
 
     private GameObject GameManager;
+    private GameObject WinZone;
 
     private bool playerHolding = false;
 
@@ -23,6 +24,7 @@ public class flaregun : MonoBehaviour
     void Start()
     {
         GameManager = GameObject.FindGameObjectWithTag("GameManager");
+        WinZone = GameObject.FindGameObjectWithTag("WinLocation");
     }
 
     // Update is called once per frame
@@ -33,8 +35,11 @@ public class flaregun : MonoBehaviour
             if (currentRound > 0)
             {
                 Shoot();
-                GameManager.SendMessage("ActivateRescueHelicopter", SendMessageOptions.DontRequireReceiver);
-                Debug.Log("Calling helicopter script");
+                if(Vector3.Distance(transform.position,WinZone.transform.position) < 50f)
+                {
+                    GameManager.SendMessage("ActivateRescueHelicopter", SendMessageOptions.DontRequireReceiver);
+                    Debug.Log("Calling helicopter script");
+                }
             }
             else
             {
