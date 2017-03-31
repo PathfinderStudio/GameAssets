@@ -6,7 +6,10 @@ using UnityEngine.UI;
 public class emergencyFlareControl : MonoBehaviour
 {
     public GameObject flareToThrow;
+    //Try to set to actual time
+    [Header("The Larger the Value, the Longer the Flare Lasts")]
     public float burnTime = 1000f;
+    [Header("The Larger the Value, the Shorter the Flare Lasts")]
     public float burnRate = 10f;
     public float throwDistance = 2000.0f;
     public GameObject iconCounter;

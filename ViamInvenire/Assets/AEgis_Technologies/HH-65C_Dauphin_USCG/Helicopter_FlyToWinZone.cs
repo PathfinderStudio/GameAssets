@@ -27,6 +27,8 @@ public class Helicopter_FlyToWinZone : MonoBehaviour {
     private float circleAngleTraversed;
     private float speedDecreaseFactor;
     private float descentRate = 20.0f;
+    private float distanceToWinZone;
+    private float originalDistance;
 
     private bool positiveRoll = false;
     
@@ -47,6 +49,8 @@ public class Helicopter_FlyToWinZone : MonoBehaviour {
             }
 		}
 
+        distanceToWinZone = Vector3.Distance(transform.position, winZone.transform.position);
+        originalDistance = distanceToWinZone;
         
         deltaX = winPos.x - currentPos.x;
         deltaZ = winPos.z - currentPos.z;
@@ -73,18 +77,18 @@ public class Helicopter_FlyToWinZone : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        /*
-        getTargetAngle();
-        if (transform.eulerAngles.y < targetTheta)
+        distanceToWinZone = Vector3.Distance(transform.position, winZone.transform.position);
+
+        if (!atWinZone)
         {
-            transform.eulerAngles += new Vector3(0f, 30f * Time.deltaTime, 0f);
-        }
-        if (transform.eulerAngles.y > targetTheta)
-        {
-            transform.eulerAngles -= new Vector3(0f, 30f * Time.deltaTime, 0f);
-        }*/
-        if(!atWinZone)
-        {
+            if(Mathf.Abs(distanceToWinZone) < 500f)
+            {
+                Speed -= distanceToWinZone / 500f * Speed * Time.deltaTime;
+                Speed = Mathf.Clamp(Speed, 50f, 200f);
+            }
+
+            Debug.Log("Speed: " + Speed);
+
             transform.LookAt(winZone.transform);
             transform.eulerAngles = new Vector3(0.0f, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
             transform.position += (transform.forward * Time.deltaTime * Speed);
@@ -100,6 +104,10 @@ public class Helicopter_FlyToWinZone : MonoBehaviour {
         }
         else if(atWinZone)
         {
+            if(Speed>50f)
+            {
+                Speed = 50f;
+            }
             terrainHeight = Terrain.activeTerrain.SampleHeight(transform.position);
             transform.eulerAngles += new Vector3(0f, TurnSpeed * Time.deltaTime, 0f);
             circleAngleTraversed += TurnSpeed * Time.deltaTime;
