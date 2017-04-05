@@ -76,6 +76,8 @@ public class GameTimer : MonoBehaviour
     {
         ended = true;
         timeEndPanel.SetActive(true);
+        timerTillEnd.Stop();
+        timerTillEnd.Dispose();
     }
     
 
@@ -89,11 +91,13 @@ public class GameTimer : MonoBehaviour
         if(secondsPassed < 60)
         {
             secondsPassed++;
+            Debug.Log("Seconds passed: " + secondsPassed);
         }
         else
         {
             secondsPassed = 0;
             minutesPassed++;
+            Debug.Log("Minutes passed: " + minutesPassed);
         }
     }
 
@@ -101,8 +105,8 @@ public class GameTimer : MonoBehaviour
     {
         minutesPassed = 0;
         secondsPassed = 0;
-        timerTillEnd.Stop();
-        timerTillEnd.Dispose();
+       // timerTillEnd.Stop();
+       // timerTillEnd.Dispose();
         timerTillEnd = new Timer(tickAmount);
     }
 
@@ -114,5 +118,11 @@ public class GameTimer : MonoBehaviour
         timerTillEnd.Stop();
         timerTillEnd.Dispose();
         ended = false;
+    }
+
+    public void OnApplicationQuit()
+    {
+        timerTillEnd.Stop();
+        timerTillEnd.Dispose();
     }
 }
