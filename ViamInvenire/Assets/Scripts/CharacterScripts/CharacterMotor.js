@@ -47,9 +47,10 @@ class CharacterMotorMovement {
         var collisionFlags : CollisionFlags; 
 
         // We will keep track of the character's current velocity,
-	@System.NonSerialized
+	//@System.NonSerialized
         var velocity : Vector3;
-	
+
+        var increaseY: boolean = false;	
         // This keeps track of our current velocity while we're not grounded
 	@System.NonSerialized
         var frameVelocity : Vector3 = Vector3.zero;
@@ -244,7 +245,10 @@ class CharacterMotorMovement {
                                     // Apply gravity and jumping force
                                     velocity = ApplyGravityAndJumping(velocity);
 
-   
+                                    if (movement.increaseY) {
+                                        velocity.y += 10;
+                                        movement.increaseY = false;
+                                    }
 
                                     // Moving platform support
                                     var moveDistance: Vector3 = Vector3.zero;
@@ -670,8 +674,9 @@ class CharacterMotorMovement {
                                                             movement.maxAirAcceleration = 5.0;
                                                             grounded = true;
                                                             falling = false;
-                                                        
+
                                                             velocity.y = Input.GetAxis("Vertical") * 10;
+                                                            
 
                                                         
                                                         }
@@ -693,8 +698,19 @@ class CharacterMotorMovement {
                                                                 //falling = true;
                                                                 movement.gravity = originalGravity;
                                                             }
+                                                            
                                                         }
 
+
+                                                    public function addY()
+                                                    {
+                                                      //  grounded = false;
+                                                      //  falling = true;
+                                                      //  movement.velocity.y += 100;
+                                                        // movement.velocity.y = Input.GetAxis("Vertical") * 10;
+                                                        movement.increaseY = true;
+                                                        
+                                                    }
                                                         // Require a character controller to be attached to the same game object
                                                     @script RequireComponent (CharacterController)
                                                     @script AddComponentMenu ("Character/Character Motor")
