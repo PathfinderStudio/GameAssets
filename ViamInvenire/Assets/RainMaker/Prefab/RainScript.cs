@@ -14,8 +14,6 @@ namespace DigitalRuby.RainMaker
         [Tooltip("The top y value of the mist particles")]
         public float RainMistHeight = 3.0f;
 
-        public GameObject TimeOfDayManager;
-
         private void UpdateRain()
         {
             // keep rain and mist above the player
@@ -61,7 +59,6 @@ namespace DigitalRuby.RainMaker
 
         protected override void Update()
         {
-            //if(TimeOfDayManager.GetComponent<Time of Day Manager>())
             base.Update();
 
             UpdateRain();

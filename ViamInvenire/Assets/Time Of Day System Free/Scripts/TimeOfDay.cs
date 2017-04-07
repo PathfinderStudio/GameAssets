@@ -6,8 +6,6 @@ namespace AC.TimeOfDaySystemFree
 
 	public abstract class TimeOfDay : MonoBehaviour 
 	{
-
-
 		#region Components.
 
 		// Sun and moon light.
