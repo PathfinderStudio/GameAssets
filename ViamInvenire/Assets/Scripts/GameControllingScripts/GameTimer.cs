@@ -91,13 +91,11 @@ public class GameTimer : MonoBehaviour
         if(secondsPassed < 60)
         {
             secondsPassed++;
-            Debug.Log("Seconds passed: " + secondsPassed);
         }
         else
         {
             secondsPassed = 0;
             minutesPassed++;
-            Debug.Log("Minutes passed: " + minutesPassed);
         }
     }
 
