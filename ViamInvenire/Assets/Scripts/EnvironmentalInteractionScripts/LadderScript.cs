@@ -11,6 +11,7 @@ public class LadderScript : MonoBehaviour
             if (col.gameObject.tag == "Player")
             {
                 col.gameObject.SendMessage("Climbing", true, SendMessageOptions.DontRequireReceiver);
+                col.gameObject.SendMessage("addY",  SendMessageOptions.DontRequireReceiver);
             }
         }
     }
