@@ -7,12 +7,12 @@ namespace AC.TimeOfDaySystemFree
 	[ExecuteInEditMode]
 	public class TimeOfDayManager : TimeOfDay
 	{
+        //public GameObject Rain;
 
+        #region Resources.
 
-		#region Resources.
-
-		// Autoassign sky material?.
-		[SerializeField] protected bool m_AutoAssignSky = true;
+        // Autoassign sky material?.
+        [SerializeField] protected bool m_AutoAssignSky = true;
 
 		// Sky material.
 		public Material skyMaterial = null;
@@ -401,30 +401,55 @@ namespace AC.TimeOfDaySystemFree
 		[SerializeField]protected float m_Exposure = 1.3f;
 		public  bool useExposureCurve = false;
 		public  AnimationCurve exposureCurve = AnimationCurve.Linear(0, 1.3f, 0, 1.3f);
-
+        
 		public float Exposure
 		{
 			get{ return m_Exposure;  }  
 			set{ m_Exposure = value; } 
 		}
-		//---------------------------------------------------------------------------------------
-		#endregion
-
-
-
-
-		void Start()
+        //---------------------------------------------------------------------------------------
+        #endregion
+        /*
+        ParticleSystem rainFall;
+        ParticleSystem.EmissionModule em;
+        bool isRaining = false;
+        bool hasRained = false;
+        bool rainStarting = false;
+        float particleDeltaRate = 0.05f * 1 / 60f;
+        int day;
+        float rainStartDay;
+        bool dayIncremented = false;
+        */
+        void Start()
 		{
 			if (Application.isPlaying)
 			{
-				Init();
+                /*
+                Rain = GameObject.FindGameObjectWithTag("Rain");
+                rainFall = Rain.transform.GetChild(0).GetComponent<ParticleSystem>();
+                em = rainFall.emission;
+
+                day = 0;
+
+                Rain.SetActive(false);
+                */
+                Init();
 			}
 		}
-
-
+        
 		void Update()
 		{
-
+            /*
+            if((timeline > 23.5f || timeline < 0.5f) && !dayIncremented)
+            {
+                day++;
+                dayIncremented = true;
+            }
+            else if(timeline > 0.5 && dayIncremented)
+            {
+                //dayIncremented = false;
+            }
+            */
 			if (skyMaterial == null) return;
 
 			#if UNITY_EDITOR
@@ -433,9 +458,51 @@ namespace AC.TimeOfDaySystemFree
 				Init(); 
 				timeline = Mathf.Clamp (timeline, 0 - .0001f, k_DayDuration + .0001f);
 			}
-			#endif
+            #endif
+            /*
+            //If the first night, prepare to rain.
+            if (timeline > 16 && !hasRained)
+            {
+                Rain.SetActive(true);
+                isRaining = true;
+                hasRained = true;
+                rainStarting = true;
+                rainStartDay = day;
+            }
 
-			UpdateTime ();
+            //Start raining.
+            if(Rain.activeSelf && rainStarting)
+            {
+                em.rateOverTime = particleDeltaRate;
+                foreach (AudioSource aSource in Rain.GetComponents<AudioSource>())
+                {
+                    aSource.volume += 0.1f * Time.deltaTime;
+                    aSource.volume = Mathf.Clamp(aSource.volume, 0.0f, 1.0f);
+                    if (aSource.volume >= 1.0f && rainStarting)
+                    {
+                        rainStarting = false;
+                    }
+                }
+            }
+
+            //Stop the rain, starting at 5am.
+            else if(isRaining && timeline > 5 && Rain.activeSelf && day > rainStartDay && !rainStarting)
+            {
+                em.rateOverTime = -particleDeltaRate;
+                foreach(AudioSource aSource in Rain.GetComponents<AudioSource>())
+                {
+                    aSource.volume -= 0.1f * Time.deltaTime;
+                    aSource.volume = Mathf.Clamp(aSource.volume, 0.0f, 1.0f);
+
+                    if (aSource.volume <= 0.0f)
+                    {
+                        isRaining = false;
+                        Rain.SetActive(false);
+                    }
+                }
+            }
+            */
+            UpdateTime ();
 
 			Atmosphere ();
 
