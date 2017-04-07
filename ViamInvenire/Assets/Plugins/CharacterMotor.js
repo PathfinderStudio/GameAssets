@@ -701,7 +701,6 @@ class CharacterMotorMovement {
                                                             
                                                         }
 
-
                                                     public function addY()
                                                     {
                                                       //  grounded = false;
@@ -711,6 +710,13 @@ class CharacterMotorMovement {
                                                         movement.increaseY = true;
                                                         
                                                     }
+
+                                                    public function isMovingAndGrounded()
+                                                        {
+                                                        return grounded && (movement.velocity.magnitude > 0);
+                                                        }
+
+
                                                         // Require a character controller to be attached to the same game object
                                                     @script RequireComponent (CharacterController)
                                                     @script AddComponentMenu ("Character/Character Motor")
