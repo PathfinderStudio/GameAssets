@@ -1,0 +1,12 @@
+Welcome to Viam Invenire. In this game, you will be tasked with
+navigating from one point to another in the sprawling wilderness of
+Pine Lake National Park. You will be working against the clock to
+reach a helicopter rescue point after becoming lost using a variety of tools that can
+be found around the environment. Your start and rescue points vary
+on each playthrough, and will be described to you.
+You will need to establish your bearings, use tools such 
+as a compass, map, binoculars, and more to traverse the terrain, and finally a
+flare gun to signal the helicopter. If you manage to do all of this before time
+runs out, you will survive. Otherwise, you will perish. Be sure to observe the
+world around you, looking for landmarks and where the sun rises and sets, coordinate
+with whatever tools you have, and get moving, because nightfall is not far off.
