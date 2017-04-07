@@ -25,6 +25,7 @@ public class PlayWalkSound : MonoBehaviour
     private AudioSource audioSrc;
     private AudioClip soundToPlay;
     private System.Random randSoundIndex;
+    private CharacterMotor motor;
     private bool movingAndGrounded;
 
     // Use this for initialization
@@ -39,14 +40,15 @@ public class PlayWalkSound : MonoBehaviour
         SoundsList.Add(hardDirtSounds);
         SoundsList.Add(sandSounds);
 
-        audioSrc = this.gameObject.GetComponent<AudioSource>();
-        det = this.gameObject.GetComponent<DetermineGroundTexture>();
+        audioSrc = this.GetComponent<AudioSource>();
+        det = this.GetComponent<DetermineGroundTexture>();
         textureIndex = det.GetIndexOfCurrentTexture();
         randSoundIndex = new System.Random();
         randSoundIndex.Next();
         soundToPlay = SoundsList[textureIndex][randSoundIndex.Next(SoundsList[textureIndex].Count)];
         audioSrc.clip = soundToPlay;
-        movingAndGrounded = this.gameObject.GetComponent<CharacterMotor>().isMovingAndGrounded();
+        motor = this.GetComponent<CharacterMotor>();
+        movingAndGrounded = motor.isMovingAndGrounded();
     }
 
     // Update is called once per frame
@@ -57,13 +59,12 @@ public class PlayWalkSound : MonoBehaviour
         //get a random sound from collection of sounds representing that texture
         soundToPlay = SoundsList[textureIndex][randSoundIndex.Next(SoundsList[textureIndex].Count)];
         //make sure the player is on the ground and moving
-        movingAndGrounded = this.gameObject.GetComponent<CharacterMotor>().isMovingAndGrounded();
+        movingAndGrounded = motor.isMovingAndGrounded();
         //finally make sure the sound isn't already playing
         if(movingAndGrounded && !audioSrc.isPlaying)
         {
             audioSrc.clip = soundToPlay;
             audioSrc.Play();
         }
-        //Determine sound based on index standing on.  check index on and see what it has in its name play sound accordingly
     }
 }

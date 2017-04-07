@@ -2,6 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class used to determine which surface is being stood on in the terrain.  
+/// The value returned is the texture index which currently holds the greatest
+/// influence over the location the object is located in x,z space. y axis does
+/// not influence this index.  
+/// Thank you to Jay Kay (alucardj) on
+/// http://answers.unity3d.com/questions/456973/getting-the-texture-of-a-certain-point-on-terrain.html
+/// for the code for getting this up and running.  Translated from JavaScript to
+/// C# by myself.
+/// </summary>
 public class DetermineGroundTexture : MonoBehaviour
 {
     private int surfaceIndex = 0;
@@ -12,7 +22,7 @@ public class DetermineGroundTexture : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        CurrentActiveTerrain = Terrain.activeTerrains[0];
+        CurrentActiveTerrain = Terrain.activeTerrain; //s[0]
         theTerrainData = CurrentActiveTerrain.terrainData;
         terrainPosition = CurrentActiveTerrain.transform.position;
     }
@@ -20,14 +30,14 @@ public class DetermineGroundTexture : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        surfaceIndex = GetTextureOn(this.transform.position);
+        surfaceIndex = GetTextureOn(transform.position);
     }
 
     private float[] GetTextureMix(Vector3 worldPosition)
     {
         //getting the splat map cell for our current position
-        int mapX = (int)((worldPosition.x - terrainPosition.x) / theTerrainData.size.x) * theTerrainData.alphamapWidth;
-        int mapZ = (int)((worldPosition.z - terrainPosition.z) / theTerrainData.size.z) * theTerrainData.alphamapHeight;
+        int mapX = (int)(((worldPosition.x - terrainPosition.x) / theTerrainData.size.x) * theTerrainData.alphamapWidth);
+        int mapZ = (int)(((worldPosition.z - terrainPosition.z) / theTerrainData.size.z) * theTerrainData.alphamapHeight);
 
         //get the splat data for this cell for a 1x1xN 3d array where n is number of textures
         float[,,] splatData = theTerrainData.GetAlphamaps(mapX, mapZ, 1, 1);
