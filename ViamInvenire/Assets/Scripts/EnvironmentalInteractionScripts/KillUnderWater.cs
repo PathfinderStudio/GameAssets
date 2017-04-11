@@ -36,7 +36,7 @@ public class KillUnderWater : MonoBehaviour
             drowningTimer += Time.deltaTime;
             alphaRatio = drowningTimer / drowningLimit;
             drowningTimerPanel.GetComponent<Image>().color = new Color(drowningTimerPanel.GetComponent<Image>().color.r, drowningTimerPanel.GetComponent<Image>().color.g, drowningTimerPanel.GetComponent<Image>().color.b, alphaRatio);
-            drowningTimerPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(0.0f, 0.0f, 0.0f, alphaRatio);
+            drowningTimerPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(alphaRatio, alphaRatio, alphaRatio, alphaRatio);
             if (drowningTimer > drowningLimit)
             {
                 toKill.KillPlayer();
