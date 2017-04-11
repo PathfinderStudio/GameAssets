@@ -20,11 +20,11 @@ public class MapControl : MonoBehaviour
     void Start()
     {
         lowLocation = new Vector3(-0.341f, -0.250f, 1.026f);
-        highLocation = new Vector3(0.009f, -0.047f, 0.836f);
+        highLocation = new Vector3(0.009f, 0.0f, 0.836f);
         lowRotation = new Vector3(1.35f, 76f, 13.48f);
         highRotation = new Vector3(-1.25f, 91.22f, 3.35f);
         lowScale = 0.77f;
-        highScale = 1.54f;
+        highScale = 1.89f; //1.54f
         this.transform.localPosition = lowLocation;
         this.transform.localEulerAngles = lowRotation;
         this.transform.localScale = new Vector3(lowScale, lowScale, lowScale);

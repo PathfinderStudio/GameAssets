@@ -21,7 +21,9 @@ public class flaregun : MonoBehaviour
     private GameObject WinZone;
 
     private bool playerHolding = false;
+    private bool helicopterCalled = false;
     private GameObject Player;
+
 
     // Use this for initialization
     void Start()
@@ -40,8 +42,9 @@ public class flaregun : MonoBehaviour
             if (currentRound > 0)
             {
                 Shoot();
-                if(Vector3.Distance(transform.position,WinZone.transform.position) < 50f)
+                if(Vector3.Distance(transform.position,WinZone.transform.position) < 50f && !helicopterCalled)
                 {
+                    helicopterCalled = true;
                     PlayerAudioSource.Stop();
                     PlayerAudioSource.clip = helicopterRadio;
                     PlayerAudioSource.Play();

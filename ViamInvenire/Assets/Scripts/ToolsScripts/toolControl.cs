@@ -81,35 +81,38 @@ public class toolControl : MonoBehaviour
     {
         if (canSwitch)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha0)) // to select no item
+            if(mapState != MapState.RaisedPosition)
             {
-                switchItems(false, false, false, false, false, false);
+                if (Input.GetKeyDown(KeyCode.Alpha0)) // to select no item
+                {
+                    switchItems(false, false, false, false, false, false);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha1)) // to select flares
+                {
+                    switchItems(false, false, false, false, false, true);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha2)) // to select compass
+                {
+                    switchItems(true, false, false, false, false, false);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha3)) // to select flashlight
+                {
+                    switchItems(false, true, true, false, false, false);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha4)) // to select binoculars
+                {
+                    switchItems(false, false, false, true, false, false);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha5)) // to select flare gun
+                {
+                    switchItems(false, false, false, false, true, false);
+                }
+                else if (Input.GetKeyDown(KeyCode.Tab)) //to show inventory
+                {
+                    InventoryUI.GetComponent<InventoryUI>().showInventory();
+                }
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha1)) // to select flares
-            {
-                switchItems(false, false, false, false, false, true);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) // to select compass
-            {
-                switchItems(true, false, false, false, false, false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) // to select flashlight
-            {
-                switchItems(false, true, true, false, false, false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4)) // to select binoculars
-            {
-                switchItems(false, false, false, true, false, false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5)) // to select flare gun
-            {
-                switchItems(false, false, false, false, true, false);
-            }
-            else if (Input.GetKeyDown(KeyCode.Tab)) //to show inventory
-            {
-                InventoryUI.GetComponent<InventoryUI>().showInventory();
-            }
-            else if(Input.GetKeyUp(KeyCode.M))
+            if(Input.GetKeyUp(KeyCode.M))
             {
                 if(mapState == MapState.PutAway)
                 {
