@@ -76,4 +76,9 @@ public class CharacterDeathScript : MonoBehaviour
     {
         grounded = false;
     }
+
+    public void KillPlayer()
+    {
+        gonnnaDie = true;
+    }
 }
