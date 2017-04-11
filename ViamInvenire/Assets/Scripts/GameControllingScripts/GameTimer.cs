@@ -43,6 +43,8 @@ public class GameTimer : MonoBehaviour
         timerTillEnd.Elapsed += OnTimedEvent;
         timerTillEnd.AutoReset = true;
         timerTillEnd.Enabled = true;
+        ended = false;
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
@@ -50,7 +52,6 @@ public class GameTimer : MonoBehaviour
     {
         if (minutesPassed >= minutesToEscape)
         {
-            timerTillEnd.AutoReset = false;
             timerTillEnd.Stop();
             EndGame();
         }
@@ -76,8 +77,6 @@ public class GameTimer : MonoBehaviour
     {
         ended = true;
         timeEndPanel.SetActive(true);
-        timerTillEnd.Stop();
-        timerTillEnd.Dispose();
     }
     
 
@@ -103,9 +102,9 @@ public class GameTimer : MonoBehaviour
     {
         minutesPassed = 0;
         secondsPassed = 0;
-       // timerTillEnd.Stop();
-       // timerTillEnd.Dispose();
-        timerTillEnd = new Timer(tickAmount);
+        timerTillEnd.Start();
+        Cursor.lockState = CursorLockMode.Locked;
+       
     }
 
     //need to receive when helicopter is called so that the timer doesn't keep going
@@ -114,7 +113,7 @@ public class GameTimer : MonoBehaviour
         minutesPassed = 0;
         secondsPassed = 0;
         timerTillEnd.Stop();
-        timerTillEnd.Dispose();
+        //timerTillEnd.Dispose();
         ended = false;
     }
 
