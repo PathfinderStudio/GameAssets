@@ -53,6 +53,7 @@ public class TextIntro : MonoBehaviour
         }
         if (timeElapsed > 17f)
         {
+            Cursor.visible = true;
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneToLoadAfterIntro);
         }
     }
