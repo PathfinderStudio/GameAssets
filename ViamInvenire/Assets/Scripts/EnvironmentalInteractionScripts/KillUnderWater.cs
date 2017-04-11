@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class KillUnderWater : MonoBehaviour
 {
@@ -19,21 +20,23 @@ public class KillUnderWater : MonoBehaviour
         drowningTimer = 0.0f;
         drowningTimerPanel.SetActive(true);
         drowningTimerPanel.GetComponent<Image>().color = new Color(drowningTimerPanel.GetComponent<Image>().color.r, drowningTimerPanel.GetComponent<Image>().color.g, drowningTimerPanel.GetComponent<Image>().color.b, 0);
+        drowningTimerPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
         alphaRatio = 0.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(this.transform.position.y < 8)
+        if(this.transform.position.y < 8.3f)
         {
-            if(this.transform.position.y < 7)
+            if(this.transform.position.y < 7.0f)
             {
                 drowningTimer = drowningLimit + 1;
             }
             drowningTimer += Time.deltaTime;
-            alphaRatio = drowningTimer / drowningLimit * 255.0f;
+            alphaRatio = drowningTimer / drowningLimit;
             drowningTimerPanel.GetComponent<Image>().color = new Color(drowningTimerPanel.GetComponent<Image>().color.r, drowningTimerPanel.GetComponent<Image>().color.g, drowningTimerPanel.GetComponent<Image>().color.b, alphaRatio);
+            drowningTimerPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
             if (drowningTimer > drowningLimit)
             {
                 drowningTimerPanel.SetActive(false);
@@ -43,6 +46,7 @@ public class KillUnderWater : MonoBehaviour
         else
         {
             drowningTimerPanel.GetComponent<Image>().color = new Color(drowningTimerPanel.GetComponent<Image>().color.r, drowningTimerPanel.GetComponent<Image>().color.g, drowningTimerPanel.GetComponent<Image>().color.b, 0);
+            drowningTimerPanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
             drowningTimer = 0.0f;
         }
     }
