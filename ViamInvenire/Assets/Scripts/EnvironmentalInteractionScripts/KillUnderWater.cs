@@ -15,7 +15,7 @@ public class KillUnderWater : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(this.transform.position.y < -160)
+        if(this.transform.position.y < 8)
         {
             toKill.KillPlayer();
         }
