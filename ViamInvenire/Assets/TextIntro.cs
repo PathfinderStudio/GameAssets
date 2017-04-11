@@ -16,6 +16,8 @@ public class TextIntro : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Cursor.visible = false;
+
         IntroText1 = GameObject.Find("Text1").GetComponent<Text>();
         IntroText2 = GameObject.Find("Text2").GetComponent<Text>();
 
@@ -51,6 +53,7 @@ public class TextIntro : MonoBehaviour
         }
         if (timeElapsed > 17f)
         {
+            Cursor.visible = true;
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneToLoadAfterIntro);
         }
     }
