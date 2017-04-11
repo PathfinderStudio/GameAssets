@@ -92,7 +92,7 @@ public class emergencyFlareControl : MonoBehaviour
         }
         if (!lit && amount > 0 && Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Application.OpenURL("https://youtu.be/U1ei5rwO7ZI"); //great song
+            //Application.OpenURL("https://youtu.be/U1ei5rwO7ZI"); //great song
             amount--;
             iconCounter.SendMessage("DecrementAmount", SendMessageOptions.DontRequireReceiver);
             lit = true;
@@ -205,7 +205,7 @@ public class emergencyFlareControl : MonoBehaviour
         this.GetComponent<Rigidbody>().AddForce(throwDirection * throwDistance);
         this.GetComponent<CapsuleCollider>().enabled = true;
         flying = true;
-        playSound();
+        //playSound();   //how to play herucles sound, its dope.
     }
 
     public void itemPickedUp(bool input)
