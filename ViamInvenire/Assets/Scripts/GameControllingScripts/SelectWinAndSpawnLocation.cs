@@ -62,5 +62,9 @@ public class SelectWinAndSpawnLocation : MonoBehaviour
         toolsSpawnLoc.transform.GetChild(index).gameObject.SetActive(true);
         toolsSpawnLoc.transform.GetChild(index).gameObject.GetComponent<SpawnToolsScript>().BeginSpawning();
     }
+    public int getSpawnIndex()
+    {
+        return index;
+    }
 
 }
