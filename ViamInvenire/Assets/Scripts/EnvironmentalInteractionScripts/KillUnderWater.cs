@@ -27,7 +27,7 @@ public class KillUnderWater : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(this.transform.position.y < 8.0f)
+        if(this.transform.position.y < 7.8f)
         {
             if(this.transform.position.y < 7.0f)
             {
