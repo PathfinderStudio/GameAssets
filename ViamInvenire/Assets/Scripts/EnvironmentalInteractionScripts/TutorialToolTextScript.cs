@@ -6,11 +6,12 @@ using TMPro;
 public class TutorialToolTextScript : MonoBehaviour
 {
     private GameObject player;
-    private static int count = 0;
+    private static int count;
 
     // Use this for initialization
     void Start()
     {
+        count = 0;
         player = GameObject.FindGameObjectWithTag("Player");
         this.GetComponent<MeshRenderer>().enabled = false;
     }
