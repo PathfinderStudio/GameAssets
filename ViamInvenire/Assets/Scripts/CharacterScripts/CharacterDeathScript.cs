@@ -18,6 +18,10 @@ public class CharacterDeathScript : MonoBehaviour
     private bool willLoseStamina;
     private float staminaVelocity;
 
+    private float invulnerabilityTime;
+    private bool invulnerable = true;
+
+
     // Use this for initialization
     void Start()
     {
@@ -29,38 +33,47 @@ public class CharacterDeathScript : MonoBehaviour
         gonnnaDie = false;
         willLoseStamina = false;
         staminaVelocity = -30.0f;
+
+        invulnerabilityTime = 0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        if(!grounded)
+        if(invulnerable)
         {
-            characterYVelocity = character.velocity.y;
-            if (characterYVelocity < deathVelocity)
+            invulnerabilityTime += Time.deltaTime;
+        }
+
+        if(invulnerabilityTime > 2.0f)
+        {
+            invulnerable = false;
+            if (!grounded)
             {
-                gonnnaDie = true;
+                characterYVelocity = character.velocity.y;
+                if (characterYVelocity < deathVelocity)
+                {
+                    gonnnaDie = true;
+                }
+                else if (characterYVelocity < staminaVelocity)
+                {
+                    willLoseStamina = true;
+                }
             }
-            else if(characterYVelocity < staminaVelocity)
+            else
             {
-                willLoseStamina = true;
+                if (willLoseStamina)
+                {
+                    willLoseStamina = false;
+                    SendMessage("LostStamina", SendMessageOptions.DontRequireReceiver);
+                }
+                if (gonnnaDie)
+                {
+                    youDiedPanel.SetActive(true);
+                    //Time.timeScale = 0;
+                }
             }
         }
-        else
-        {
-            if(willLoseStamina)
-            {
-                willLoseStamina = false;
-                SendMessage("LostStamina", SendMessageOptions.DontRequireReceiver);
-            }
-            if(gonnnaDie)
-            {
-                youDiedPanel.SetActive(true);
-                //Time.timeScale = 0;
-            }
-        }
-        
     }
 
     public void OnLand()

@@ -314,7 +314,7 @@ namespace DigitalRuby.RainMaker
             AudioSource = script.gameObject.AddComponent<AudioSource>();
             AudioSource.loop = true;
             AudioSource.clip = clip;
-            AudioSource.playOnAwake = false;
+            AudioSource.playOnAwake = true;
             AudioSource.volume = 0.0f;
             AudioSource.Stop();
             TargetVolume = 1.0f;
@@ -337,10 +337,12 @@ namespace DigitalRuby.RainMaker
 
         public void Update()
         {
+            /*   
             if (AudioSource.isPlaying && (AudioSource.volume = Mathf.Lerp(AudioSource.volume, TargetVolume, Time.deltaTime)) == 0.0f)
             {
                 AudioSource.Stop();
             }
+          */  
         }
     }
 
