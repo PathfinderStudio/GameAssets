@@ -10,19 +10,24 @@ public class flaregun : MonoBehaviour
     public AudioClip flareShotSound;
     public AudioClip noAmmoSound;
     public AudioClip reloadSound;
+    public AudioClip helicopterRadio;
     public int bulletSpeed = 2000;
     public int maxSpareRounds = 5;
     public int spareRounds = 3;
     public int currentRound = 0;
-
+    
+    private AudioSource PlayerAudioSource;
     private GameObject GameManager;
     private GameObject WinZone;
 
     private bool playerHolding = false;
+    private GameObject Player;
 
     // Use this for initialization
     void Start()
     {
+        Player = GameObject.FindGameObjectWithTag("Player");
+        PlayerAudioSource = Player.GetComponent<AudioSource>();
         GameManager = GameObject.FindGameObjectWithTag("GameManager");
         WinZone = GameObject.FindGameObjectWithTag("WinLocation");
     }
@@ -37,6 +42,9 @@ public class flaregun : MonoBehaviour
                 Shoot();
                 if(Vector3.Distance(transform.position,WinZone.transform.position) < 50f)
                 {
+                    PlayerAudioSource.Stop();
+                    PlayerAudioSource.clip = helicopterRadio;
+                    PlayerAudioSource.Play();
                     GameManager.SendMessage("ActivateRescueHelicopter", SendMessageOptions.DontRequireReceiver);
                     Debug.Log("Calling helicopter script");
                 }
