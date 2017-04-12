@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Helicopter_FlyToWinZone : MonoBehaviour {
 
+    public int outroSceneIndex;
     public float Speed = 100f;
     public float TurnSpeed = 30f;
     public GameObject WinZoneContainer;
@@ -134,6 +135,10 @@ public class Helicopter_FlyToWinZone : MonoBehaviour {
                     {
                         descentRate -= 10.0f * Time.deltaTime;
                         descentRate = Mathf.Clamp(descentRate, 0.1f, float.PositiveInfinity);
+                    }
+                    if(transform.position.y - terrainHeight < 6.0f)
+                    {
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(outroSceneIndex);
                     }
                     
                 }
