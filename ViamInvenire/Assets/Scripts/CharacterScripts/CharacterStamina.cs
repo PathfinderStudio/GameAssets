@@ -113,6 +113,15 @@ public class CharacterStamina : MonoBehaviour
         canMove = val;
     }
 
+    /// <summary>
+    /// Tells whether or not the player is running currently.
+    /// </summary>
+    /// <returns>Boolean value of running is found from input from player and current ability to run.</returns>
+    public bool GetIsRunning()
+    {
+        return running;
+    }
+
     private void OnGUI()
     {
         float amountOfStam = (runTime - currentTimeRunning) / runTime;

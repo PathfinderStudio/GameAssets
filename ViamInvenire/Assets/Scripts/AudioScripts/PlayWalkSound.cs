@@ -18,6 +18,13 @@ public class PlayWalkSound : MonoBehaviour
     public List<AudioClip> hardDirtSounds;
     [Header("Sand Sound List")]
     public List<AudioClip> sandSounds;
+    [Header("Audio Settings")]
+    [Range(0.0f, 10.0f)]
+    public float clipSpeed = 1f;
+    [Range(0.0f, 10.0f)]
+    public float clipVolume = 1f;
+    public float runningClipSpeedModifier = 2f;
+    public float runningClipVolumeModifier = 2f;
 
     private List<List<AudioClip>> SoundsList;
     private int textureIndex;
@@ -36,9 +43,9 @@ public class PlayWalkSound : MonoBehaviour
         SoundsList.Add(brownGrassSounds);
         SoundsList.Add(solidRockSounds);
         SoundsList.Add(gravelRockSounds);
-        SoundsList.Add(softDirtSounds);
+        //SoundsList.Add(softDirtSounds);  //Haven't been added yet.
         SoundsList.Add(hardDirtSounds);
-        SoundsList.Add(sandSounds);
+        //SoundsList.Add(sandSounds);
 
         audioSrc = this.GetComponent<AudioSource>();
         det = this.GetComponent<DetermineGroundTexture>();
@@ -63,6 +70,17 @@ public class PlayWalkSound : MonoBehaviour
         //finally make sure the sound isn't already playing
         if(movingAndGrounded && !audioSrc.isPlaying)
         {
+            //player is running, increase tempo of footsteps and volume slightly
+            if(this.GetComponent<CharacterStamina>().GetIsRunning())
+            {
+                audioSrc.pitch = clipSpeed * runningClipSpeedModifier;
+                audioSrc.volume = clipVolume * runningClipVolumeModifier;
+            }
+            else
+            {
+                audioSrc.pitch = clipSpeed;
+                audioSrc.volume = clipVolume;
+            }
             audioSrc.clip = soundToPlay;
             audioSrc.Play();
         }
