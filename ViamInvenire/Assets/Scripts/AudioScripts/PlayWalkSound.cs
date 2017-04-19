@@ -43,9 +43,9 @@ public class PlayWalkSound : MonoBehaviour
         SoundsList.Add(brownGrassSounds);
         SoundsList.Add(solidRockSounds);
         SoundsList.Add(gravelRockSounds);
-        //SoundsList.Add(softDirtSounds);  //Haven't been added yet.
+        SoundsList.Add(softDirtSounds);  
         SoundsList.Add(hardDirtSounds);
-        //SoundsList.Add(sandSounds);
+        SoundsList.Add(sandSounds);
 
         audioSrc = this.GetComponent<AudioSource>();
         det = this.GetComponent<DetermineGroundTexture>();
