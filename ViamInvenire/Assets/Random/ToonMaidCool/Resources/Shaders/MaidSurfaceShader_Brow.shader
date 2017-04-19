@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
 Shader "Custom/MaidSurfaceShader_Brow" {
 	Properties
@@ -135,7 +137,7 @@ Shader "Custom/MaidSurfaceShader_Brow" {
 			
 			float edge_size = abs( (_EdgeSize * 1/viewLength) / r_proj_y * world_pos.z * r_proj_near);
 			
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex + float4(v.normal.xyz * edge_size,0.0));
+				o.pos = UnityObjectToClipPos(v.vertex + float4(v.normal.xyz * edge_size,0.0));
 
 				o.color = _EdgeColor;
 
