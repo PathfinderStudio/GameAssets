@@ -45,7 +45,7 @@ public class CharacterDeathScript : MonoBehaviour
             invulnerabilityTime += Time.deltaTime;
         }
 
-        if(invulnerabilityTime > 2.0f)
+        if(!invulnerable && invulnerabilityTime > 2.0f)
         {
             invulnerable = false;
             if (!grounded)
