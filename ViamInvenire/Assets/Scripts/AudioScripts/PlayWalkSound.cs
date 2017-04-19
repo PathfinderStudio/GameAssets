@@ -29,6 +29,7 @@ public class PlayWalkSound : MonoBehaviour
     private List<List<AudioClip>> SoundsList;
     private int textureIndex;
     private DetermineGroundTexture det;
+    private AudioSource[] audioSources;
     private AudioSource audioSrc;
     private AudioClip soundToPlay;
     private System.Random randSoundIndex;
@@ -47,7 +48,9 @@ public class PlayWalkSound : MonoBehaviour
         SoundsList.Add(hardDirtSounds);
         SoundsList.Add(sandSounds);
 
-        audioSrc = this.GetComponent<AudioSource>();
+        audioSources = this.GetComponents<AudioSource>();
+        //walking audio source
+        audioSrc = audioSources[0]; 
         det = this.GetComponent<DetermineGroundTexture>();
         textureIndex = det.GetIndexOfCurrentTexture();
         randSoundIndex = new System.Random();
