@@ -40,12 +40,12 @@ public class PlayWalkSound : MonoBehaviour
     {
         SoundsList = new List<List<AudioClip>>();
         SoundsList.Add(greenGrassSounds);
-        SoundsList.Add(brownGrassSounds);
+        SoundsList.Add(sandSounds);
         SoundsList.Add(solidRockSounds);
-        SoundsList.Add(gravelRockSounds);
-        //SoundsList.Add(softDirtSounds);  //Haven't been added yet.
         SoundsList.Add(hardDirtSounds);
-        //SoundsList.Add(sandSounds);
+        SoundsList.Add(brownGrassSounds);
+        SoundsList.Add(gravelRockSounds);
+        SoundsList.Add(softDirtSounds);  
 
         audioSrc = this.GetComponent<AudioSource>();
         det = this.GetComponent<DetermineGroundTexture>();
@@ -81,6 +81,7 @@ public class PlayWalkSound : MonoBehaviour
                 audioSrc.pitch = clipSpeed;
                 audioSrc.volume = clipVolume;
             }
+            
             audioSrc.clip = soundToPlay;
             audioSrc.Play();
         }
