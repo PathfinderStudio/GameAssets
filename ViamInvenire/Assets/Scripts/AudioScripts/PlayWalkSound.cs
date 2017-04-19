@@ -41,12 +41,12 @@ public class PlayWalkSound : MonoBehaviour
     {
         SoundsList = new List<List<AudioClip>>();
         SoundsList.Add(greenGrassSounds);
-        SoundsList.Add(brownGrassSounds);
+        SoundsList.Add(sandSounds);
         SoundsList.Add(solidRockSounds);
+        SoundsList.Add(hardDirtSounds);
+        SoundsList.Add(brownGrassSounds);
         SoundsList.Add(gravelRockSounds);
         SoundsList.Add(softDirtSounds);  
-        SoundsList.Add(hardDirtSounds);
-        SoundsList.Add(sandSounds);
 
         audioSources = this.GetComponents<AudioSource>();
         //walking audio source
@@ -84,6 +84,7 @@ public class PlayWalkSound : MonoBehaviour
                 audioSrc.pitch = clipSpeed;
                 audioSrc.volume = clipVolume;
             }
+            
             audioSrc.clip = soundToPlay;
             audioSrc.Play();
         }
