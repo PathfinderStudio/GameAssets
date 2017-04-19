@@ -205,7 +205,7 @@ public class emergencyFlareControl : MonoBehaviour
         this.GetComponent<Rigidbody>().AddForce(throwDirection * throwDistance);
         this.GetComponent<CapsuleCollider>().enabled = true;
         flying = true;
-        //playSound();   //how to play herucles sound, its dope.
+        playSound();   //how to play herucles sound, its dope.
     }
 
     public void itemPickedUp(bool input)

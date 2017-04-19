@@ -8,10 +8,17 @@ public class CharacterStamina : MonoBehaviour
     /// How long the player can run before running out of stamina.
     /// Larger numbers mean longer run time.
     /// </summary>
+    [Header("Stamina Settings")]
     public float runTime = 7.0f;
     public float recoveryRate = 1f;
     public float burnRate = 1f;
+    [Header("Sounds Based on Stamina")]
+    public AudioClip heavyBreathing;
+    public AudioClip jumpingExclamation;
+    public AudioClip landingGrunt;
 
+    private AudioSource[] audioSources;
+    private AudioSource audioSrc;
     private float currentTimeRunning;
     private bool tired;
     private bool running;
@@ -24,6 +31,8 @@ public class CharacterStamina : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        audioSources = this.GetComponents<AudioSource>();
+        audioSrc = audioSources[1];
         currentTimeRunning = 0;
         tired = false;
         running = false;
@@ -111,6 +120,15 @@ public class CharacterStamina : MonoBehaviour
     public void SetCanMove(bool val)
     {
         canMove = val;
+    }
+
+    /// <summary>
+    /// Tells whether or not the player is running currently.
+    /// </summary>
+    /// <returns>Boolean value of running is found from input from player and current ability to run.</returns>
+    public bool GetIsRunning()
+    {
+        return running;
     }
 
     private void OnGUI()

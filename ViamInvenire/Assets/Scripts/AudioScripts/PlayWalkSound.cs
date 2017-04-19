@@ -18,10 +18,18 @@ public class PlayWalkSound : MonoBehaviour
     public List<AudioClip> hardDirtSounds;
     [Header("Sand Sound List")]
     public List<AudioClip> sandSounds;
+    [Header("Audio Settings")]
+    [Range(0.0f, 10.0f)]
+    public float clipSpeed = 1f;
+    [Range(0.0f, 10.0f)]
+    public float clipVolume = 1f;
+    public float runningClipSpeedModifier = 2f;
+    public float runningClipVolumeModifier = 2f;
 
     private List<List<AudioClip>> SoundsList;
     private int textureIndex;
     private DetermineGroundTexture det;
+    private AudioSource[] audioSources;
     private AudioSource audioSrc;
     private AudioClip soundToPlay;
     private System.Random randSoundIndex;
@@ -33,14 +41,16 @@ public class PlayWalkSound : MonoBehaviour
     {
         SoundsList = new List<List<AudioClip>>();
         SoundsList.Add(greenGrassSounds);
-        SoundsList.Add(brownGrassSounds);
-        SoundsList.Add(solidRockSounds);
-        SoundsList.Add(gravelRockSounds);
-        SoundsList.Add(softDirtSounds);
-        SoundsList.Add(hardDirtSounds);
         SoundsList.Add(sandSounds);
+        SoundsList.Add(solidRockSounds);
+        SoundsList.Add(hardDirtSounds);
+        SoundsList.Add(brownGrassSounds);
+        SoundsList.Add(gravelRockSounds);
+        SoundsList.Add(softDirtSounds);  
 
-        audioSrc = this.GetComponent<AudioSource>();
+        audioSources = this.GetComponents<AudioSource>();
+        //walking audio source
+        audioSrc = audioSources[0]; 
         det = this.GetComponent<DetermineGroundTexture>();
         textureIndex = det.GetIndexOfCurrentTexture();
         randSoundIndex = new System.Random();
@@ -63,6 +73,18 @@ public class PlayWalkSound : MonoBehaviour
         //finally make sure the sound isn't already playing
         if(movingAndGrounded && !audioSrc.isPlaying)
         {
+            //player is running, increase tempo of footsteps and volume slightly
+            if(this.GetComponent<CharacterStamina>().GetIsRunning())
+            {
+                audioSrc.pitch = clipSpeed * runningClipSpeedModifier;
+                audioSrc.volume = clipVolume * runningClipVolumeModifier;
+            }
+            else
+            {
+                audioSrc.pitch = clipSpeed;
+                audioSrc.volume = clipVolume;
+            }
+            
             audioSrc.clip = soundToPlay;
             audioSrc.Play();
         }
