@@ -68,7 +68,7 @@ public class GameTimer : MonoBehaviour
                 mainMenuButton.SetActive(true);
                 quitButton.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
             }
         }
     }

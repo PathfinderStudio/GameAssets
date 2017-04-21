@@ -92,6 +92,7 @@ public class CharacterDeathScript : MonoBehaviour
     public void OnLand()
     {
         grounded = true;
+        
         audioSrc.clip = landingGrunt;
         audioSrc.Play();
     }
