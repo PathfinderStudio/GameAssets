@@ -9,7 +9,11 @@ public class CharacterDeathScript : MonoBehaviour
     /// The death panel used to display that you have failed the game.
     /// </summary>
     public GameObject youDiedPanel;
+    public AudioClip landingGrunt;
+    public AudioClip breakingLegs;
 
+    private AudioSource[] audioSources;
+    private AudioSource audioSrc;
     private CharacterController character;
     private float deathVelocity;
     private bool grounded;
@@ -25,6 +29,8 @@ public class CharacterDeathScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        audioSources = this.GetComponents<AudioSource>();
+        audioSrc = audioSources[1];
         youDiedPanel.SetActive(false);
         character = this.GetComponent<CharacterController>();
         characterYVelocity = character.velocity.y;
@@ -43,11 +49,15 @@ public class CharacterDeathScript : MonoBehaviour
         if(invulnerable)
         {
             invulnerabilityTime += Time.deltaTime;
+            if(invulnerabilityTime > 2.0f)
+            {
+                invulnerable = false;
+            }
         }
 
-        if(!invulnerable && invulnerabilityTime > 2.0f)
+        if(!invulnerable)
         {
-            invulnerable = false;
+            
             if (!grounded)
             {
                 characterYVelocity = character.velocity.y;
@@ -70,6 +80,9 @@ public class CharacterDeathScript : MonoBehaviour
                 if (gonnnaDie)
                 {
                     youDiedPanel.SetActive(true);
+                    audioSrc.Stop();
+                    audioSrc.clip = breakingLegs;
+                    audioSrc.Play();
                     //Time.timeScale = 0;
                 }
             }
@@ -79,6 +92,8 @@ public class CharacterDeathScript : MonoBehaviour
     public void OnLand()
     {
         grounded = true;
+        audioSrc.clip = landingGrunt;
+        audioSrc.Play();
     }
     public void OnFall()
     {

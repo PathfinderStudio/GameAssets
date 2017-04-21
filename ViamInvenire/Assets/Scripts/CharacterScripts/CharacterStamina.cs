@@ -15,7 +15,7 @@ public class CharacterStamina : MonoBehaviour
     [Header("Sounds Based on Stamina")]
     public AudioClip heavyBreathing;
     public AudioClip jumpingExclamation;
-    public AudioClip landingGrunt;
+
 
     private AudioSource[] audioSources;
     private AudioSource audioSrc;
@@ -66,8 +66,21 @@ public class CharacterStamina : MonoBehaviour
         }
         if (tired || !canMove)
         {
+            //only sound related, can be removed and not effect gameplay
+            if (tired && !audioSrc.isPlaying)
+            {
+                audioSrc.clip = heavyBreathing;
+                audioSrc.Play();
+            }
             running = false;
         }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            audioSrc.clip = jumpingExclamation;
+            audioSrc.Play();
+        }
+
         //If the player is running bring down his stamina
         if (Input.GetKeyDown(KeyCode.Space) && running)
         {
@@ -90,6 +103,11 @@ public class CharacterStamina : MonoBehaviour
         if (!tired && currentTimeRunning >= runTime)
         {
             tired = true;
+            if(!audioSrc.isPlaying)
+            {
+                audioSrc.clip = heavyBreathing;
+                audioSrc.Play();
+            }
             SendMessage("SetCanRun", false, SendMessageOptions.DontRequireReceiver);
         }
         else
