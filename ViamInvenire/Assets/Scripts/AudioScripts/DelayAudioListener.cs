@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class DelayAudioListener : MonoBehaviour {
 
-    private AudioListener audioListener;
+    public AudioListener audioListener;
     private float timer = 0.0f;
     private bool tripped = false;
 	// Use this for initialization
 	void Start ()
     {
-        audioListener = this.GetComponent<AudioListener>();
+        //audioListener = GameObject.FindObjectOfType<AudioListener>();
         audioListener.gameObject.SetActive(false);
 	}
 	
