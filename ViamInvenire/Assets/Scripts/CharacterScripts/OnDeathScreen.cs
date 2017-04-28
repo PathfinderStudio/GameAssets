@@ -38,7 +38,6 @@ public class OnDeathScreen : MonoBehaviour
                 mainMenuButton.SetActive(true);
                 quitGameButton.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
-                Time.timeScale = 0;
             }
 
 
