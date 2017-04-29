@@ -63,7 +63,7 @@ public class emergencyFlareControl : MonoBehaviour
             threwAFlare = false;
             theFlareThrown = null;
             lit = false;
-            
+
         }
         if (!lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
@@ -72,7 +72,7 @@ public class emergencyFlareControl : MonoBehaviour
             lit = true;
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
-            
+
         }
         else if (lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
@@ -165,8 +165,8 @@ public class emergencyFlareControl : MonoBehaviour
         //WWW www = new WWW(url);
         soundSource.loop = true;
         //soundSource.clip = www.GetAudioClip(true, false);
-        soundSource.time = 0.81f * soundSource.clip.length;
-        soundSource.Play();
+        //soundSource.time = 0.81f * soundSource.clip.length;
+        //soundSource.Play();
     }
 
     /// <summary>
