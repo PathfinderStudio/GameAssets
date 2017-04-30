@@ -156,7 +156,7 @@ public class toolControl : MonoBehaviour
     public void switchItems(bool compassActive, bool flashlightActice, bool flashLightOn, bool binocularsActive, bool flareGunActive, bool emergencyFlareSelected)
     {
         //sets compass
-        if (this.transform.GetChild(compassIndex).transform.GetChild(3).GetComponent<compassFollow>().isPlayerHolding())
+        if (this.transform.GetChild(compassIndex).transform.GetChild(0).GetComponent<compassFollow>().isPlayerHolding())
         {
             this.transform.GetChild(compassIndex).gameObject.SetActive(compassActive);
             //this.transform.GetChild(compassIndex).transform.GetChild(2).transform.GetChild(0).GetComponent<MeshRenderer>().enabled = compassActive;

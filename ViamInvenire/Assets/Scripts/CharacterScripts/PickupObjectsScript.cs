@@ -132,7 +132,7 @@ public class PickupObjectsScript : MonoBehaviour
             if (this.transform.GetChild(itemToPickup).tag == "Compass") //use compass
             {
                 toolControl.switchItems(true, false, false, false, false, false);
-                this.transform.GetChild(itemToPickup).GetChild(3).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
+                this.transform.GetChild(itemToPickup).GetChild(0).SendMessage("itemPickedUp", true, SendMessageOptions.DontRequireReceiver);
             }
             else if (this.transform.GetChild(itemToPickup).tag == "Binoculars") //using binoculars
             {
