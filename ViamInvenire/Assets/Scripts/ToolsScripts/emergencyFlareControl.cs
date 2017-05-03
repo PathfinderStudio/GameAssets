@@ -105,7 +105,7 @@ public class emergencyFlareControl : MonoBehaviour
 
         if (amount <= 0)
         {
-            if(burnTime < 0)
+            if(burnTime <= 0)
             {
                 itemPickedUp(false);
                 this.gameObject.SetActive(false);
