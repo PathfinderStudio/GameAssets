@@ -53,6 +53,7 @@ public class CharacterDeathScript : MonoBehaviour
             {
                 invulnerable = false;
             }
+            gonnnaDie = false;
         }
 
         if(!invulnerable)
@@ -79,10 +80,12 @@ public class CharacterDeathScript : MonoBehaviour
                 }
                 if (gonnnaDie)
                 {
-                    youDiedPanel.SetActive(true);
+                    audioSources[0].Stop();
                     audioSrc.Stop();
                     audioSrc.clip = breakingLegs;
-                    audioSrc.Play();
+                    audioSrc.PlayOneShot(audioSrc.clip, 1.0f);
+                    youDiedPanel.SetActive(true);
+                    
                     //Time.timeScale = 0;
                 }
             }
@@ -108,6 +111,9 @@ public class CharacterDeathScript : MonoBehaviour
 
     public void KillPlayer()
     {
-        gonnnaDie = true;
+        if (!youDiedPanel.activeSelf)
+        {
+            gonnnaDie = true;
+        }
     }
 }

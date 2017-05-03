@@ -63,7 +63,7 @@ public class emergencyFlareControl : MonoBehaviour
             threwAFlare = false;
             theFlareThrown = null;
             lit = false;
-            
+
         }
         if (!lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
@@ -72,7 +72,7 @@ public class emergencyFlareControl : MonoBehaviour
             lit = true;
             theFlareThrown = ThrowFlare();
             threwAFlare = true;
-            
+
         }
         else if (lit && amount > 0 && Input.GetKeyUp(KeyCode.Mouse1))
         {
@@ -103,12 +103,13 @@ public class emergencyFlareControl : MonoBehaviour
             burnTime -= burnRate * Time.deltaTime;
         }
 
-        if (burnTime < 0 && amount <= 0)
+        if (amount <= 0)
         {
-            itemPickedUp(false);
-            this.gameObject.SetActive(false);
-
-
+            if(burnTime < 0)
+            {
+                itemPickedUp(false);
+                this.gameObject.SetActive(false);
+            }
         }
         else if (!lit && amount == 0 && threwAFlare)
         {
@@ -121,7 +122,7 @@ public class emergencyFlareControl : MonoBehaviour
             //Destroy(this.gameObject, 1f * Time.deltaTime);
 
         }
-        else if (burnTime == 0 && amount > 0)
+        else if (burnTime <= 0 && amount > 0)
         {
             burnTime = originalBurnTime;
             lit = false;
@@ -165,8 +166,8 @@ public class emergencyFlareControl : MonoBehaviour
         //WWW www = new WWW(url);
         soundSource.loop = true;
         //soundSource.clip = www.GetAudioClip(true, false);
-        soundSource.time = 0.81f * soundSource.clip.length;
-        soundSource.Play();
+        //soundSource.time = 0.81f * soundSource.clip.length;
+        //soundSource.Play();
     }
 
     /// <summary>

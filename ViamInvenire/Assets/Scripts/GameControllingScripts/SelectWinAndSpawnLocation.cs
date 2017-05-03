@@ -26,6 +26,8 @@ public class SelectWinAndSpawnLocation : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+
+        Debug.Log("This is the Start Method of SelectWinAndSpawnLocation");
         randIndex = new System.Random();
         randIndex.Next();
         for (int i = 0; i < spawnLocCont.transform.childCount; i++)
